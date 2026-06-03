@@ -15,6 +15,24 @@ REPO_ROOT = Path(__file__).resolve().parent
 OUTPUT_DIR = REPO_ROOT / "output"
 
 
+def _format_money(v):
+    try:
+        return f"{float(v):,.2f}"
+    except (TypeError, ValueError):
+        return "0.00"
+
+
+def _format_pct(v):
+    try:
+        return f"{float(v) * 100:.2f}%"
+    except (TypeError, ValueError):
+        return "—"
+
+
+app.jinja_env.filters["f2"] = _format_money
+app.jinja_env.filters["pct"] = _format_pct
+
+
 # --------- helpers -------------------------------------------------------- #
 
 def get_next_pay_date(end_date_str: str) -> str:
