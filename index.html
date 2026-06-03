@@ -553,6 +553,7 @@ function ytdBefore(empCode, periodEnd) {
     special_amount: 0, maternity_hours: 0, maternity_amount: 0,
     federal_tax: 0, quebec_tax: 0,
     ei_ee: 0, qpip_ee: 0, qpp_ee: 0,
+    medical: 0, pension_ee: 0,
     net_pay: 0, vacation_accrual: 0
   };
   history.forEach(p => {
@@ -659,7 +660,12 @@ function calculatePay(employee, hours, periodEnd) {
   const fed_tax = employee.tax_exempt_federal ? 0 : calculateFederalTax(gross, employee, periods);
   const qc_tax = employee.tax_exempt_quebec ? 0 : calculateQuebecTax(gross, employee, periods);
   const vac_accrual = gross * employee.vacation_rate;
-  const total_deductions = fed_tax + qc_tax + ei_ee + qpip_ee + qpp_ee;
+
+  // Post-tax / benefit deductions (only when employee earned this pay)
+  const medical = gross > 0 ? (employee.medical_insurance || 0) : 0;
+  const pension_ee = gross > 0 ? (employee.pension_ee || 0) : 0;
+
+  const total_deductions = fed_tax + qc_tax + ei_ee + qpip_ee + qpp_ee + medical + pension_ee;
   const net_pay = gross - total_deductions;
 
   return {
@@ -671,7 +677,8 @@ function calculatePay(employee, hours, periodEnd) {
     maternity_hours: mat_hrs, maternity_amount: mat_amt,
     gross, federal_tax: fed_tax, quebec_tax: qc_tax,
     ei_ee, ei_er, qpip_ee, qpip_er, qpp_ee, qpp_er,
-    fss, csst, total_deductions, net_pay, vacation_accrual, ytd
+    fss, csst, medical, pension_ee,
+    total_deductions, net_pay, vacation_accrual, ytd
   };
 }
 
@@ -982,7 +989,9 @@ function viewPeriod(periodEnd) {
       <table>
         <thead><tr>
           <th>Employee</th><th>Gross</th><th>Fed Tax</th><th>QC Tax</th>
-          <th>EI</th><th>QPIP</th><th>QPP</th><th>Net Pay</th><th>Vac Accr</th><th></th>
+          <th>EI</th><th>QPIP</th><th>QPP</th>
+          <th>Medical</th><th>Pension</th>
+          <th>Net Pay</th><th>Vac Accr</th><th></th>
         </tr></thead>
         <tbody>
           ${rec.results.filter(r => r.gross > 0).map(r => {
@@ -996,6 +1005,8 @@ function viewPeriod(periodEnd) {
                 <td class="num">$${fmt(r.ei_ee)}</td>
                 <td class="num">$${fmt(r.qpip_ee)}</td>
                 <td class="num">$${fmt(r.qpp_ee)}</td>
+                <td class="num">$${fmt(r.medical || 0)}</td>
+                <td class="num">$${fmt(r.pension_ee || 0)}</td>
                 <td class="num" style="font-weight:700;color:var(--success);">$${fmt(r.net_pay)}</td>
                 <td class="num">$${fmt(r.vacation_accrual)}</td>
                 <td><button class="primary small" onclick="showPayslip('${periodEnd}','${r.employee_code}')">📄</button></td>
@@ -1011,6 +1022,8 @@ function viewPeriod(periodEnd) {
             <td class="num">$${fmt(rec.results.reduce((s,r)=>s+r.ei_ee,0))}</td>
             <td class="num">$${fmt(rec.results.reduce((s,r)=>s+r.qpip_ee,0))}</td>
             <td class="num">$${fmt(rec.results.reduce((s,r)=>s+r.qpp_ee,0))}</td>
+            <td class="num">$${fmt(rec.results.reduce((s,r)=>s+(r.medical||0),0))}</td>
+            <td class="num">$${fmt(rec.results.reduce((s,r)=>s+(r.pension_ee||0),0))}</td>
             <td class="num">$${fmt(totalNet)}</td>
             <td class="num">$${fmt(rec.results.reduce((s,r)=>s+r.vacation_accrual,0))}</td>
             <td></td>
@@ -1038,6 +1051,8 @@ function showPayslip(periodEnd, empCode) {
   const ytdEi = (r.ytd.ei_ee || 0) + r.ei_ee;
   const ytdQpip = (r.ytd.qpip_ee || 0) + r.qpip_ee;
   const ytdQpp = (r.ytd.qpp_ee || 0) + r.qpp_ee;
+  const ytdMedical = (r.ytd.medical || 0) + (r.medical || 0);
+  const ytdPension = (r.ytd.pension_ee || 0) + (r.pension_ee || 0);
   const ytdVacAccr = (r.ytd.vacation_accrual || 0) + r.vacation_accrual;
   const ytdVacPaid = (r.ytd.vacation_amount || 0) + r.vacation_amount;
   const vacBalance = ytdVacAccr - ytdVacPaid;
@@ -1126,7 +1141,7 @@ function showPayslip(periodEnd, empCode) {
       </div>
 
       <div class="payslip-section">
-        <h3>Deductions</h3>
+        <h3>Statutory Deductions (Pre-Tax)</h3>
         <table>
           <thead>
             <tr><th>Description</th><th style="text-align:right;">Current</th><th style="text-align:right;">YTD</th></tr>
@@ -1135,12 +1150,47 @@ function showPayslip(periodEnd, empCode) {
             <tr><td>QPP (Quebec Pension Plan)</td><td class="num">$${fmt(r.qpp_ee)}</td><td class="num">$${fmt(ytdQpp)}</td></tr>
             <tr><td>EI (Employment Insurance)</td><td class="num">$${fmt(r.ei_ee)}</td><td class="num">$${fmt(ytdEi)}</td></tr>
             <tr><td>QPIP / RQAP (Parental Insurance)</td><td class="num">$${fmt(r.qpip_ee)}</td><td class="num">$${fmt(ytdQpip)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="payslip-section">
+        <h3>Income Taxes</h3>
+        <table>
+          <thead>
+            <tr><th>Description</th><th style="text-align:right;">Current</th><th style="text-align:right;">YTD</th></tr>
+          </thead>
+          <tbody>
             <tr><td>Federal Income Tax</td><td class="num">$${fmt(r.federal_tax)}</td><td class="num">$${fmt(ytdFed)}</td></tr>
             <tr><td>Quebec Income Tax</td><td class="num">$${fmt(r.quebec_tax)}</td><td class="num">$${fmt(ytdQc)}</td></tr>
           </tbody>
-          <tfoot>
-            <tr><td><strong>TOTAL DEDUCTIONS</strong></td><td class="num"><strong>$${fmt(r.total_deductions)}</strong></td><td class="num"><strong>$${fmt(ytdFed + ytdQc + ytdEi + ytdQpip + ytdQpp)}</strong></td></tr>
-          </tfoot>
+        </table>
+      </div>
+
+      ${(r.medical || r.pension_ee || ytdMedical || ytdPension) ? `
+      <div class="payslip-section">
+        <h3>Post-Tax Deductions (Benefits)</h3>
+        <table>
+          <thead>
+            <tr><th>Description</th><th style="text-align:right;">Current</th><th style="text-align:right;">YTD</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Medical / Group Insurance</td><td class="num">$${fmt(r.medical || 0)}</td><td class="num">$${fmt(ytdMedical)}</td></tr>
+            <tr><td>Pension / Group RRSP (Employee)</td><td class="num">$${fmt(r.pension_ee || 0)}</td><td class="num">$${fmt(ytdPension)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      ` : ''}
+
+      <div class="payslip-section">
+        <table>
+          <tbody>
+            <tr style="font-weight:700;background:var(--gray-50);">
+              <td><strong>TOTAL DEDUCTIONS</strong></td>
+              <td class="num"><strong>$${fmt(r.total_deductions)}</strong></td>
+              <td class="num"><strong>$${fmt(ytdFed + ytdQc + ytdEi + ytdQpip + ytdQpp + ytdMedical + ytdPension)}</strong></td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
@@ -1406,6 +1456,13 @@ function openEmployeeModal(code) {
             <div><label>Extra Federal Tax/pay ($)</label><input id="emp_additional_federal_tax" type="number" step="0.01" value="${emp.additional_federal_tax || 0}"></div>
             <div><label>Extra Quebec Tax/pay ($)</label><input id="emp_additional_quebec_tax" type="number" step="0.01" value="${emp.additional_quebec_tax || 0}"></div>
           </div>
+
+          <h4 style="font-size:13px;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;margin:24px 0 12px;">Post-Tax Benefits (Per Pay $)</h4>
+          <div class="form-row">
+            <div><label>Medical / Group Insurance ($)</label><input id="emp_medical_insurance" type="number" step="0.01" value="${emp.medical_insurance || 0}" placeholder="0.00"></div>
+            <div><label>Pension / Group RRSP ($)</label><input id="emp_pension_ee" type="number" step="0.01" value="${emp.pension_ee || 0}" placeholder="0.00"></div>
+          </div>
+
           <div style="margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;">
             <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;cursor:pointer;">
               <input type="checkbox" id="emp_active" ${emp.active ? 'checked' : ''} style="width:auto;"> Active
@@ -1433,7 +1490,8 @@ function saveEmployee(isEdit) {
   const fields = ['code','employee_id','first_name','last_name','occupation','department',
                   'sin','hire_date','address_line_1','address_line_2','city','province','postal_code'];
   const numFields = ['rate_per_hour','federal_td1_claim','provincial_td1_claim',
-                     'additional_federal_tax','additional_quebec_tax'];
+                     'additional_federal_tax','additional_quebec_tax',
+                     'medical_insurance','pension_ee'];
   const data = {};
   fields.forEach(f => data[f] = (document.getElementById('emp_' + f) || {}).value || '');
   numFields.forEach(f => data[f] = parseFloat(document.getElementById('emp_' + f).value) || 0);
