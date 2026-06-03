@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Payroll run — {{ company.name }} — {{ period.pay_end_date }}</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 10pt; margin: 24px; }
+  h1 { font-size: 14pt; margin-bottom: 4px; }
+  .meta { color: #555; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #999; padding: 4px 6px; }
+  th { background: #efefef; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tfoot td { font-weight: bold; background: #f7f7f7; }
+  caption { caption-side: top; text-align: left; font-weight: bold;
+            margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<h1>{{ company.name }} — Payroll Run</h1>
+<div class="meta">
+  Pay end {{ period.pay_end_date }} · Payment date {{ period.payment_date }}
+  · Pay {{ period.pay_number }} of {{ company.pay_periods_per_year }}
+</div>
+
+<table>
+  <caption>Per-employee — current period</caption>
+  <thead>
+    <tr>
+      <th>Dept</th><th>Employee</th>
+      <th>Gross</th><th>Fed Tax</th><th>QC Tax</th>
+      <th>EI-EE</th><th>EI-ER</th>
+      <th>QPIP-EE</th><th>QPIP-ER</th>
+      <th>QPP-EE</th><th>QPP-ER</th>
+      <th>FSS</th><th>CSST</th>
+      <th>Total Ded</th><th>Net Pay</th>
+      <th>Vac Accr</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for emp, r in rows %}
+    <tr>
+      <td>{{ emp.code }}</td>
+      <td>{{ emp.full_name }}</td>
+      <td class="num">{{ r.gross | f2 }}</td>
+      <td class="num">{{ r.federal_tax | f2 }}</td>
+      <td class="num">{{ r.quebec_tax | f2 }}</td>
+      <td class="num">{{ r.ei_ee | f2 }}</td>
+      <td class="num">{{ r.ei_er | f2 }}</td>
+      <td class="num">{{ r.qpip_ee | f2 }}</td>
+      <td class="num">{{ r.qpip_er | f2 }}</td>
+      <td class="num">{{ r.qpp_ee | f2 }}</td>
+      <td class="num">{{ r.qpp_er | f2 }}</td>
+      <td class="num">{{ r.fss | f2 }}</td>
+      <td class="num">{{ r.csst | f2 }}</td>
+      <td class="num">{{ r.total_deductions | f2 }}</td>
+      <td class="num">{{ r.net_pay | f2 }}</td>
+      <td class="num">{{ r.vacation_accrual | f2 }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2">TOTAL</td>
+      <td class="num">{{ totals.gross | f2 }}</td>
+      <td class="num">{{ totals.federal_tax | f2 }}</td>
+      <td class="num">{{ totals.quebec_tax | f2 }}</td>
+      <td class="num">{{ totals.ei_ee | f2 }}</td>
+      <td class="num">{{ totals.ei_er | f2 }}</td>
+      <td class="num">{{ totals.qpip_ee | f2 }}</td>
+      <td class="num">{{ totals.qpip_er | f2 }}</td>
+      <td class="num">{{ totals.qpp_ee | f2 }}</td>
+      <td class="num">{{ totals.qpp_er | f2 }}</td>
+      <td class="num">{{ totals.fss | f2 }}</td>
+      <td class="num">{{ totals.csst | f2 }}</td>
+      <td class="num">{{ totals.total_deductions | f2 }}</td>
+      <td class="num">{{ totals.net_pay | f2 }}</td>
+      <td class="num">{{ totals.vacation_accrual | f2 }}</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h2 style="margin-top:24px; font-size:12pt;">Employer remittance (DAS)</h2>
+<table>
+  <tr><th>Federal income tax</th><td class="num">{{ totals.federal_tax | f2 }}</td></tr>
+  <tr><th>EI (EE + ER)</th><td class="num">{{ (totals.ei_ee + totals.ei_er) | f2 }}</td></tr>
+  <tr><th>Quebec income tax</th><td class="num">{{ totals.quebec_tax | f2 }}</td></tr>
+  <tr><th>QPIP (EE + ER)</th><td class="num">{{ (totals.qpip_ee + totals.qpip_er) | f2 }}</td></tr>
+  <tr><th>QPP (EE + ER)</th><td class="num">{{ (totals.qpp_ee + totals.qpp_er) | f2 }}</td></tr>
+  <tr><th>FSS</th><td class="num">{{ totals.fss | f2 }}</td></tr>
+  <tr><th>CSST</th><td class="num">{{ totals.csst | f2 }}</td></tr>
+  <tr style="font-weight:bold;background:#f7f7f7;">
+    <th>Total to remit</th>
+    <td class="num">{{ (totals.federal_tax + totals.ei_ee + totals.ei_er
+                       + totals.quebec_tax + totals.qpip_ee + totals.qpip_er
+                       + totals.qpp_ee + totals.qpp_er
+                       + totals.fss + totals.csst) | f2 }}</td>
+  </tr>
+</table>
+
+</body>
+</html>

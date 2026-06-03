@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Payroll YTD Summary — {{ company.name }} — {{ period.year }}</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 10pt; margin: 24px; }
+  h1 { font-size: 14pt; margin-bottom: 4px; }
+  .meta { color: #555; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  th, td { border: 1px solid #999; padding: 4px 6px; }
+  th { background: #efefef; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tfoot td { font-weight: bold; background: #f7f7f7; }
+  h2 { font-size: 12pt; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<h1>{{ company.name }} — YTD Payroll Summary</h1>
+<div class="meta">
+  Year {{ period.year }} · through pay end {{ period.pay_end_date }}
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Dept</th><th>Employee</th>
+      <th>Gross</th>
+      <th>Reg Hrs</th><th>Hol Hrs</th><th>Vac Hrs</th><th>Mat Hrs</th>
+      <th>Fed Tax</th><th>QC Tax</th>
+      <th>EI-EE</th><th>QPIP-EE</th><th>QPP-EE</th>
+      <th>Net Pay</th>
+      <th>Vac Accr</th><th>Vac Paid</th><th>Vac Bal</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for r in by_employee %}
+    <tr>
+      <td>{{ r.code }}</td>
+      <td>{{ r.name }}</td>
+      <td class="num">{{ r.ytd_gross | f2 }}</td>
+      <td class="num">{{ r.ytd_regular_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_holiday_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_maternity_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_federal_tax | f2 }}</td>
+      <td class="num">{{ r.ytd_quebec_tax | f2 }}</td>
+      <td class="num">{{ r.ytd_ei_ee | f2 }}</td>
+      <td class="num">{{ r.ytd_qpip_ee | f2 }}</td>
+      <td class="num">{{ r.ytd_qpp_ee | f2 }}</td>
+      <td class="num">{{ r.ytd_net_pay | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_accrual | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_amount | f2 }}</td>
+      <td class="num">{{ r.vacation_balance | f2 }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2">TOTAL</td>
+      <td class="num">{{ totals.ytd_gross | f2 }}</td>
+      <td class="num">{{ totals.ytd_regular_hours | f2 }}</td>
+      <td class="num">{{ totals.ytd_holiday_hours | f2 }}</td>
+      <td class="num">{{ totals.ytd_vacation_hours | f2 }}</td>
+      <td class="num">{{ totals.ytd_maternity_hours | f2 }}</td>
+      <td class="num">{{ totals.ytd_federal_tax | f2 }}</td>
+      <td class="num">{{ totals.ytd_quebec_tax | f2 }}</td>
+      <td class="num">{{ totals.ytd_ei_ee | f2 }}</td>
+      <td class="num">{{ totals.ytd_qpip_ee | f2 }}</td>
+      <td class="num">{{ totals.ytd_qpp_ee | f2 }}</td>
+      <td class="num">{{ totals.ytd_net_pay | f2 }}</td>
+      <td class="num">{{ totals.ytd_vacation_accrual | f2 }}</td>
+      <td class="num">{{ totals.ytd_vacation_amount | f2 }}</td>
+      <td class="num">{{ totals.vacation_balance | f2 }}</td>
+    </tr>
+  </tfoot>
+</table>
+
+</body>
+</html>

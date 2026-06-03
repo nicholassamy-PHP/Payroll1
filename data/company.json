@@ -1,0 +1,13 @@
+{
+  "name": "Garderie La Belle Academie Inc.",
+  "address_line_1": "",
+  "address_line_2": "",
+  "city": "",
+  "province": "QC",
+  "postal_code": "",
+  "payroll_year": 2026,
+  "pay_periods_per_year": 26,
+  "pay_frequency": "biweekly",
+  "payroll_fees_per_run": 65.10,
+  "bank_fees_per_run": 5.00
+}

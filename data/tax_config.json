@@ -1,0 +1,60 @@
+{
+  "year": 2026,
+  "comment": "Quebec biweekly payroll statutory rates. Rates & basic amounts taken from the GARDERIE_2_May_2026.xlsx header row; tax brackets are CRA / Revenu Quebec public schedules. Override per-employee in employees.json.",
+
+  "federal": {
+    "basic_personal_amount": 16452,
+    "canada_employment_amount": 1471,
+    "lowest_bracket_rate": 0.15,
+    "credit_rate": 0.15,
+    "quebec_abatement": 0.165,
+    "brackets": [
+      {"upper": 57375,  "rate": 0.15},
+      {"upper": 114750, "rate": 0.205},
+      {"upper": 177882, "rate": 0.26},
+      {"upper": 253414, "rate": 0.29},
+      {"upper": null,   "rate": 0.33}
+    ]
+  },
+
+  "quebec": {
+    "basic_personal_amount": 18952,
+    "worker_deduction_rate": 0.06,
+    "worker_deduction_max": 1420,
+    "credit_rate": 0.14,
+    "brackets": [
+      {"upper": 53255,  "rate": 0.14},
+      {"upper": 106495, "rate": 0.19},
+      {"upper": 129590, "rate": 0.24},
+      {"upper": null,   "rate": 0.2575}
+    ]
+  },
+
+  "ei": {
+    "ee_rate": 0.013,
+    "er_multiplier": 1.4,
+    "annual_max_insurable": 68900
+  },
+
+  "qpip": {
+    "ee_rate": 0.0043,
+    "er_rate": 0.00602,
+    "annual_max_insurable": 103000
+  },
+
+  "qpp": {
+    "ee_rate": 0.063,
+    "er_rate": 0.063,
+    "basic_exemption_annual": 3500,
+    "annual_max_pensionable": 74600
+  },
+
+  "fss": {
+    "rate": 0.0165
+  },
+
+  "csst": {
+    "rate": 0.0177,
+    "annual_max_insurable": 88000
+  }
+}

@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+
+# Generated payroll output — recreated by `python -m payroll run`
+output/
+
+# Historical pay data is persisted here; commit when you want a snapshot
+# but do not check in client PII by default.
+data/history/

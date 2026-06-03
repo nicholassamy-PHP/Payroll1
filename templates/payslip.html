@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Payslip — {{ employee.full_name }} — {{ period.pay_end_date }}</title>
+<style>
+  body { font-family: "Courier New", monospace; font-size: 11pt; color: #111;
+         max-width: 800px; margin: 24px auto; padding: 0 24px; }
+  .company { text-align: center; font-size: 13pt; font-weight: bold; margin-bottom: 4px; }
+  .stub-title { text-align: center; font-weight: bold; margin: 12px 0 16px; }
+  .meta { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .meta .label { font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  th, td { padding: 3px 6px; border: 1px solid #999; }
+  th { background: #efefef; text-align: right; }
+  td.label, th.label { text-align: left; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.total td { font-weight: bold; background: #f7f7f7; }
+  .net { font-size: 13pt; text-align: right; margin: 18px 0; }
+  .footer { display: flex; justify-content: space-between; gap: 24px;
+            font-size: 9.5pt; margin-top: 18px; }
+  .footer .block { flex: 1; }
+  .nn { text-align: center; font-weight: bold; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="company">{{ company.name }}</div>
+<div style="text-align:center; font-size:9pt;">{{ company.address }}</div>
+
+<div class="stub-title">STATEMENT OF EARNINGS AND DEDUCTIONS</div>
+
+<div class="meta">
+  <div>
+    <div><span class="label">SSS HIRE DATE:</span> {{ employee.hire_date }}</div>
+    <div><span class="label">EMPLOYEE ID:</span> {{ employee.employee_id }}</div>
+    <div><span class="label">OCCUPATION:</span> {{ employee.occupation }}</div>
+  </div>
+  <div style="text-align:right;">
+    <div><span class="label">PAYMENT DATE:</span> {{ period.payment_date }}</div>
+    <div><span class="label">PAY END DATE:</span> {{ period.pay_end_date }}</div>
+    <div><span class="label">PAY #:</span> {{ period.pay_number }} of {{ company.pay_periods_per_year }}</div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th class="label">EARNINGS</th>
+      <th>RATE</th>
+      <th>CURRENT HRS</th>
+      <th>CURRENT AMOUNT</th>
+      <th>YTD HRS</th>
+      <th>YTD AMOUNT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="label">REGULAR</td>
+      <td class="num">{{ rate }}</td>
+      <td class="num">{{ r.regular_hours | f2 }}</td>
+      <td class="num">{{ r.regular_amount | f2 }}</td>
+      <td class="num">{{ r.ytd_regular_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_regular_amount | f2 }}</td>
+    </tr>
+    <tr>
+      <td class="label">Hol pay</td>
+      <td class="num">{{ rate }}</td>
+      <td class="num">{{ r.holiday_hours | f2 }}</td>
+      <td class="num">{{ r.holiday_amount | f2 }}</td>
+      <td class="num">{{ r.ytd_holiday_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_holiday_amount | f2 }}</td>
+    </tr>
+    <tr>
+      <td class="label">VAC PAID</td>
+      <td class="num">{{ rate }}</td>
+      <td class="num">{{ r.vacation_hours | f2 }}</td>
+      <td class="num">{{ r.vacation_amount | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_amount | f2 }}</td>
+    </tr>
+    <tr>
+      <td class="label">Spec Pay</td>
+      <td class="num">{{ rate }}</td>
+      <td class="num">—</td>
+      <td class="num">{{ r.special_amount | f2 }}</td>
+      <td class="num">—</td>
+      <td class="num">{{ r.ytd_special_amount | f2 }}</td>
+    </tr>
+    <tr>
+      <td class="label">MAL PAY</td>
+      <td class="num">{{ rate }}</td>
+      <td class="num">{{ r.maternity_hours | f2 }}</td>
+      <td class="num">{{ r.maternity_amount | f2 }}</td>
+      <td class="num">{{ r.ytd_maternity_hours | f2 }}</td>
+      <td class="num">{{ r.ytd_maternity_amount | f2 }}</td>
+    </tr>
+    <tr class="total">
+      <td class="label">TOTAL GROSS</td>
+      <td></td><td></td>
+      <td class="num">{{ r.gross | f2 }}</td>
+      <td></td>
+      <td class="num">{{ r.ytd_gross | f2 }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th class="label">DEDUCTIONS</th>
+      <th>CURRENT</th>
+      <th>YTD</th>
+      <th class="label">DEDUCTIONS</th>
+      <th>CURRENT</th>
+      <th>YTD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="label">GOVT PEN (QPP)</td>
+      <td class="num">{{ r.qpp_ee | f2 }}</td>
+      <td class="num">{{ r.ytd_qpp_ee | f2 }}</td>
+      <td class="label">EI CONT</td>
+      <td class="num">{{ r.ei_ee | f2 }}</td>
+      <td class="num">{{ r.ytd_ei_ee | f2 }}</td>
+    </tr>
+    <tr>
+      <td class="label">QPIP / RQAP</td>
+      <td class="num">{{ r.qpip_ee | f2 }}</td>
+      <td class="num">{{ r.ytd_qpip_ee | f2 }}</td>
+      <td class="label">FED L TAX</td>
+      <td class="num">{{ r.federal_tax | f2 }}</td>
+      <td class="num">{{ r.ytd_federal_tax | f2 }}</td>
+    </tr>
+    <tr>
+      <td class="label">PROV TAX (QC)</td>
+      <td class="num">{{ r.quebec_tax | f2 }}</td>
+      <td class="num">{{ r.ytd_quebec_tax | f2 }}</td>
+      <td class="label"></td>
+      <td class="num"></td>
+      <td class="num"></td>
+    </tr>
+    <tr class="total">
+      <td class="label">TOTAL DEDUCTIONS</td>
+      <td class="num">{{ r.total_deductions | f2 }}</td>
+      <td class="num">{{ (r.ytd_qpp_ee + r.ytd_qpip_ee + r.ytd_quebec_tax + r.ytd_ei_ee + r.ytd_federal_tax) | f2 }}</td>
+      <td class="label">NET PAY</td>
+      <td class="num">{{ r.net_pay | f2 }}</td>
+      <td class="num">{{ r.ytd_net_pay | f2 }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="net">NET PAY: <strong>${{ r.net_pay | f2 }}</strong></div>
+
+<table>
+  <thead>
+    <tr>
+      <th class="label">VACATION</th>
+      <th>CURRENT ACCRUAL</th>
+      <th>YTD ACCRUED</th>
+      <th>YTD PAID</th>
+      <th>BALANCE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="label">@ {{ employee.vacation_rate | pct }}</td>
+      <td class="num">{{ r.vacation_accrual | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_accrual | f2 }}</td>
+      <td class="num">{{ r.ytd_vacation_amount | f2 }}</td>
+      <td class="num">{{ r.vacation_balance | f2 }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="nn">— NON NEGOTIABLE —</div>
+
+<div class="footer">
+  <div class="block">
+    <div><strong>{{ employee.full_name }}</strong></div>
+    <div>{{ employee.address_line_1 }}</div>
+    {% if employee.address_line_2 %}<div>{{ employee.address_line_2 }}</div>{% endif %}
+    <div>{{ employee.city }} {{ employee.province }} {{ employee.postal_code }}</div>
+    <div>SIN: {{ employee.sin }}</div>
+    {% if employee.date_of_birth %}<div>DOB: {{ employee.date_of_birth }}</div>{% endif %}
+  </div>
+  <div class="block">
+    <div><strong>{{ company.name }}</strong></div>
+    <div>{{ company.address }}</div>
+    <div>Dept: {{ employee.department }}</div>
+  </div>
+</div>
+
+</body>
+</html>

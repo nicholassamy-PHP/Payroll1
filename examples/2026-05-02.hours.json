@@ -1,0 +1,17 @@
+{
+  "_period": {
+    "pay_end_date": "2026-05-02",
+    "payment_date":  "2026-05-08",
+    "notes": "Sample hours file replicating the May 02 2026 pay period from the workbook"
+  },
+  "Hooma":    {"regular": 80.50, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Nadin":    {"regular": 58.25, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Lana":     {"regular": 65.00, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Majda":    {"regular": 65.00, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Gracia":   {"regular": 75.00, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Rouba":    {"regular": 69.00, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Lysa":     {"regular": 0,     "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Torpekay": {"regular": 15.00, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Silva":    {"regular": 67.75, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0},
+  "Lara":     {"regular": 51.00, "holiday_paid": 0,    "vacation_paid": 0, "special": 0, "maternity": 0}
+}
