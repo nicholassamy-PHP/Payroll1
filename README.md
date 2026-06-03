@@ -152,3 +152,41 @@ output/2026-05-02/
 
 The same data also lands in `data/history/2026.json` so the next period's
 YTD picks up automatically.
+
+## Web interface
+
+A **Flask web app** (`app.py`) provides a browser-based UI:
+
+```bash
+pip install -r requirements.txt
+python app.py
+# Visit http://localhost:5000
+```
+
+Features:
+- 📊 Dashboard showing employees and recent periods
+- 📝 Form to enter hours for a pay period
+- 📄 View generated payslips, run sheets, YTD summaries
+- 🖨️ Print payslips to PDF directly from browser
+
+## Deployment
+
+Deploy to **Render** or **Railway** (both support Python/Flask):
+
+### Render
+1. Push to GitHub (this repo)
+2. Go to https://dashboard.render.com → New Web Service
+3. Connect GitHub repo
+4. Build command: (empty — auto-detected)
+5. Start command: `gunicorn app:app`
+6. Deploy
+
+### Railway
+1. Push to GitHub
+2. Go to https://railway.app → New Project
+3. Deploy from GitHub repo
+4. Railway auto-detects Procfile and deploys
+
+Both will expose the app at a public URL. YTD history persists in `data/history/`
+which is generated per-run and stored in the git repo (commit it manually
+or use a persistent volume in Railway/Render).
