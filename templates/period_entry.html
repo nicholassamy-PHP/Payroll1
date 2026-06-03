@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Enter Hours — {{ period_end }}{% endblock %}
+
+{% block content %}
+
+<nav>
+  <a href="/">← Back to Dashboard</a>
+</nav>
+
+<div class="card">
+  <h2>📝 Enter Hours for Period</h2>
+  <p><strong>Period end:</strong> {{ period_end }}</p>
+  <p><strong>Payment date:</strong> {{ pay_date }}</p>
+</div>
+
+<div class="card">
+  <h2>Hours by Employee</h2>
+  <form id="hoursForm">
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Regular</th>
+          <th>Holiday Paid</th>
+          <th>Vacation Paid</th>
+          <th>Special</th>
+          <th>Maternity</th>
+        </tr>
+      </thead>
+      <tbody id="hoursTableBody">
+      </tbody>
+    </table>
+    <div style="margin-top: 20px;">
+      <button type="button" onclick="submitHours()">Run Payroll →</button>
+      <button type="button" class="secondary" onclick="window.location.href='/'">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<script>
+const templateHours = {{ template_hours | safe }};
+const employees = {{ employees | tojson | safe }};
+
+function initForm() {
+  const tbody = document.getElementById("hoursTableBody");
+  employees.forEach(emp => {
+    const row = document.createElement("tr");
+    const h = templateHours[emp.first_name] || {};
+    row.innerHTML = `
+      <td><strong>${emp.full_name}</strong></td>
+      <td><input type="number" name="${emp.code}_regular" step="0.25" value="${h.regular || 0}"></td>
+      <td><input type="number" name="${emp.code}_holiday_paid" step="0.25" value="${h.holiday_paid || 0}"></td>
+      <td><input type="number" name="${emp.code}_vacation_paid" step="0.25" value="${h.vacation_paid || 0}"></td>
+      <td><input type="number" name="${emp.code}_special" step="0.25" value="${h.special || 0}"></td>
+      <td><input type="number" name="${emp.code}_maternity" step="0.25" value="${h.maternity || 0}"></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function submitHours() {
+  const form = document.getElementById("hoursForm");
+  const formData = new FormData(form);
+
+  // Parse into hours by employee
+  const hoursByEmp = {};
+  employees.forEach(emp => {
+    hoursByEmp[emp.first_name] = {
+      regular: parseFloat(formData.get(`${emp.code}_regular`) || 0),
+      holiday_paid: parseFloat(formData.get(`${emp.code}_holiday_paid`) || 0),
+      vacation_paid: parseFloat(formData.get(`${emp.code}_vacation_paid`) || 0),
+      special: parseFloat(formData.get(`${emp.code}_special`) || 0),
+      maternity: parseFloat(formData.get(`${emp.code}_maternity`) || 0),
+      ssl_hours: 0,
+      other_amount: 0,
+    };
+  });
+
+  // Show loading
+  document.body.style.opacity = 0.6;
+  document.body.style.pointerEvents = "none";
+
+  // Submit to API
+  fetch("/api/run-period", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      period_end: "{{ period_end }}",
+      pay_date: "{{ pay_date }}",
+      hours: hoursByEmp,
+    }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      alert(`Payroll run successful!\nEmployees paid: ${data.employees_paid}\nGross total: $${data.gross_total.toFixed(2)}`);
+      window.location.href = `/period/{{ period_end }}`;
+    } else {
+      alert("Error: " + (data.error || "Unknown"));
+      document.body.style.opacity = 1;
+      document.body.style.pointerEvents = "auto";
+    }
+  })
+  .catch(err => {
+    alert("Error: " + err.message);
+    document.body.style.opacity = 1;
+    document.body.style.pointerEvents = "auto";
+  });
+}
+
+initForm();
+</script>
+
+{% endblock %}

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Payroll System{% endblock %}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+  }
+  header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  header h1 { font-size: 24px; margin-bottom: 4px; }
+  header p { font-size: 14px; opacity: 0.9; }
+  main { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+  nav { margin-bottom: 20px; }
+  nav a {
+    display: inline-block;
+    padding: 10px 16px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #2c3e50;
+    margin-right: 8px;
+    transition: all 0.2s;
+  }
+  nav a:hover { background: #f0f0f0; }
+  .card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .card h2 { font-size: 18px; margin-bottom: 12px; color: #2c3e50; }
+  button, input[type="submit"], a.button {
+    padding: 10px 16px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+  button:hover, input[type="submit"]:hover, a.button:hover {
+    background: #229954;
+  }
+  button.secondary {
+    background: #95a5a6;
+  }
+  button.secondary:hover {
+    background: #7f8c8d;
+  }
+  form {
+    display: grid;
+    gap: 12px;
+  }
+  label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  th {
+    background: #ecf0f1;
+    font-weight: 600;
+  }
+  tr:hover { background: #f9f9f9; }
+  .alert {
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .alert.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  .alert.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  .loading { display: none; }
+  .loading.show { display: inline-block; }
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 12px;
+    margin-top: 40px;
+  }
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header>
+  <h1>{{ company.name }}</h1>
+  <p>Biweekly Payroll System</p>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  <p>Quebec Payroll System &copy; 2026. Powered by Python + Flask.</p>
+</footer>
+
+<script>
+{% block extra_js %}{% endblock %}
+</script>
+
+</body>
+</html>

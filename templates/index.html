@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — {{ company.name }}{% endblock %}
+
+{% block content %}
+
+<nav>
+  <a href="/">Home</a>
+</nav>
+
+<div class="card">
+  <h2>📊 Dashboard</h2>
+  <p><strong>Year:</strong> {{ company.payroll_year }}</p>
+  <p><strong>Pay frequency:</strong> {{ company.pay_frequency }} ({{ company.pay_periods_per_year }} pays/year)</p>
+  <p><strong>Active employees:</strong> {{ employees | length }}</p>
+</div>
+
+<div class="card">
+  <h2>👥 Employees</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Rate</th>
+        <th>Hire Date</th>
+        <th>Occupation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for emp in employees %}
+        <tr>
+          <td><strong>{{ emp.code }}</strong></td>
+          <td>{{ emp.full_name }}</td>
+          <td>${{ "%.2f" | format(emp.rate_per_hour) }}/hr</td>
+          <td>{{ emp.hire_date }}</td>
+          <td>{{ emp.occupation }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>📋 Recent Pay Periods</h2>
+  {% if periods %}
+    <table>
+      <thead>
+        <tr>
+          <th>Period End</th>
+          <th>Pay #</th>
+          <th>Payment Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for period_rec in periods %}
+          <tr>
+            <td><strong>{{ period_rec.period.pay_end_date }}</strong></td>
+            <td>#{{ period_rec.period.pay_number }} of {{ company.pay_periods_per_year }}</td>
+            <td>{{ period_rec.period.payment_date }}</td>
+            <td>
+              <a href="/run-sheet/{{ period_rec.period.pay_end_date }}" class="button">Run Sheet</a>
+              <a href="/summary/{{ period_rec.period.pay_end_date }}" class="button">Summary</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No pay periods on file yet.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>➕ Enter Hours for New Period</h2>
+  <form>
+    <div>
+      <label for="period_end">Pay Period End Date:</label>
+      <input type="date" id="period_end" name="period_end" required>
+    </div>
+    <button type="button" onclick="goToPeriod()">Continue →</button>
+  </form>
+</div>
+
+<script>
+function goToPeriod() {
+  const end = document.getElementById("period_end").value;
+  if (!end) {
+    alert("Please select a date");
+    return;
+  }
+  window.location.href = `/period/${end}`;
+}
+</script>
+
+{% endblock %}

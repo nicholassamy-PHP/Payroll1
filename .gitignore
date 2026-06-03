@@ -4,6 +4,12 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+*.egg-info/
+dist/
+build/
+.env
+.env.local
+.env.*.local
 
 # Generated payroll output — recreated by `python -m payroll run`
 output/
@@ -11,3 +17,13 @@ output/
 # Historical pay data is persisted here; commit when you want a snapshot
 # but do not check in client PII by default.
 data/history/
+
+# Flask
+instance/
+.webassets-cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Results — {{ period.pay_end_date }}{% endblock %}
+
+{% block content %}
+
+<nav>
+  <a href="/">← Back to Dashboard</a>
+</nav>
+
+<div class="card">
+  <h2>✅ Payroll Run Complete</h2>
+  <p><strong>Period end:</strong> {{ period.pay_end_date }}</p>
+  <p><strong>Payment date:</strong> {{ period.payment_date }}</p>
+  <p><strong>Pay #:</strong> {{ period.pay_number }} of {{ company.pay_periods_per_year }}</p>
+</div>
+
+<div class="card">
+  <h2>📊 Run Summary</h2>
+  <table>
+    <tr>
+      <td><strong>Total gross:</strong></td>
+      <td style="text-align: right; font-weight: bold;">${{ "{:.2f}".format(results | map(attribute='gross') | sum) }}</td>
+    </tr>
+    <tr>
+      <td><strong>Total deductions:</strong></td>
+      <td style="text-align: right;">${{ "{:.2f}".format(results | map(attribute='total_deductions') | sum) }}</td>
+    </tr>
+    <tr>
+      <td><strong>Total net pay:</strong></td>
+      <td style="text-align: right; font-weight: bold; color: #27ae60;">${{ "{:.2f}".format(results | map(attribute='net_pay') | sum) }}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>📄 Payslips</h2>
+  <p>Click an employee name to view their payslip:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Employee</th>
+        <th>Gross</th>
+        <th>Deductions</th>
+        <th>Net Pay</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+        {% if result.gross > 0 %}
+          <tr>
+            <td><strong>{{ result.employee_code }}</strong></td>
+            <td>${{ "{:.2f}".format(result.gross) }}</td>
+            <td>${{ "{:.2f}".format(result.total_deductions) }}</td>
+            <td style="font-weight: bold; color: #27ae60;">${{ "{:.2f}".format(result.net_pay) }}</td>
+            <td>
+              <a href="/payslip/{{ period.pay_end_date }}/{{ result.employee_code }}" target="_blank" class="button">View</a>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>📋 Reports</h2>
+  <p>
+    <a href="/run-sheet/{{ period.pay_end_date }}" target="_blank" class="button">Run Sheet</a>
+    <a href="/summary/{{ period.pay_end_date }}" target="_blank" class="button">YTD Summary</a>
+  </p>
+</div>
+
+{% endblock %}
