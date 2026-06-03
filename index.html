@@ -6,10 +6,12 @@
 <title>Quebec Payroll System</title>
 <style>
   :root {
-    --primary: #4f46e5;
-    --primary-dark: #4338ca;
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #eef2ff;
     --success: #10b981;
     --success-dark: #059669;
+    --success-light: #d1fae5;
     --danger: #ef4444;
     --warning: #f59e0b;
     --gray-50: #f9fafb;
@@ -22,36 +24,43 @@
     --gray-700: #374151;
     --gray-800: #1f2937;
     --gray-900: #111827;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8edf5 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
     color: var(--gray-800);
     line-height: 1.5;
     min-height: 100vh;
   }
   header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     color: white;
-    padding: 28px 24px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    padding: 32px 24px;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
   }
-  header .header-inner {
+  .header-inner {
     max-width: 1280px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
   }
-  header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
-  header .subtitle { font-size: 13px; opacity: 0.85; margin-top: 2px; }
-  header .badge {
-    background: rgba(255,255,255,0.2);
-    padding: 6px 12px;
+  header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  header .subtitle { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+  .badge {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
     border-radius: 999px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.2);
   }
   main { max-width: 1280px; margin: 24px auto; padding: 0 24px; }
 
@@ -61,113 +70,140 @@
     margin-bottom: 24px;
     background: white;
     padding: 6px;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
   }
   nav.tabs button {
     flex: 1;
-    padding: 10px 16px;
+    min-width: 120px;
+    padding: 12px 16px;
     background: transparent;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     color: var(--gray-600);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     transition: all 0.15s;
+    font-family: inherit;
   }
   nav.tabs button:hover { background: var(--gray-100); color: var(--gray-800); }
   nav.tabs button.active {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    box-shadow: 0 1px 3px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
   }
 
   .card {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: 14px;
+    padding: 28px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    box-shadow: var(--shadow);
     border: 1px solid var(--gray-100);
   }
   .card h2 {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 19px;
+    font-weight: 700;
     color: var(--gray-900);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    letter-spacing: -0.01em;
   }
-  .card h2 .icon { font-size: 20px; }
+  .card h2 .icon { font-size: 22px; }
 
   .stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
   }
   .stat {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
     border: 1px solid var(--gray-100);
+    position: relative;
+    overflow: hidden;
   }
-  .stat .label { font-size: 12px; color: var(--gray-500); font-weight: 500;
-                 text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-  .stat .value { font-size: 24px; font-weight: 700; color: var(--gray-900); }
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--primary);
+  }
+  .stat.success::before { background: var(--success); }
+  .stat.warning::before { background: var(--warning); }
+  .stat .label { font-size: 11px; color: var(--gray-500); font-weight: 600;
+                 text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .stat .value { font-size: 28px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; }
   .stat .value.success { color: var(--success); }
   .stat .value.primary { color: var(--primary); }
+  .stat .sub { font-size: 11px; color: var(--gray-500); margin-top: 4px; }
 
   button {
-    padding: 10px 18px;
+    padding: 11px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     font-family: inherit;
     transition: all 0.15s;
     display: inline-flex;
     align-items: center;
     gap: 6px;
   }
-  button.primary { background: var(--primary); color: white; }
-  button.primary:hover { background: var(--primary-dark); transform: translateY(-1px);
-                         box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3); }
-  button.success { background: var(--success); color: white; }
-  button.success:hover { background: var(--success-dark); }
-  button.secondary { background: var(--gray-100); color: var(--gray-700); }
-  button.secondary:hover { background: var(--gray-200); }
-  button.danger { background: var(--danger); color: white; padding: 6px 12px; font-size: 12px; }
+  button.primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
+  }
+  button.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35); }
+  button.success {
+    background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+  }
+  button.success:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35); }
+  button.secondary { background: white; color: var(--gray-700); border: 1px solid var(--gray-200); }
+  button.secondary:hover { background: var(--gray-50); border-color: var(--gray-300); }
+  button.danger { background: var(--danger); color: white; padding: 8px 14px; font-size: 12px; }
   button.danger:hover { background: #dc2626; }
-  button.small { padding: 6px 12px; font-size: 12px; }
+  button.small { padding: 8px 14px; font-size: 12px; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-  input, select {
+  input, select, textarea {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--gray-300);
-    border-radius: 8px;
+    padding: 11px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
     transition: all 0.15s;
     background: white;
+    color: var(--gray-800);
   }
-  input:focus, select:focus {
+  input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
   }
   label {
     display: block;
-    font-weight: 500;
-    font-size: 13px;
-    color: var(--gray-700);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--gray-600);
     margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
   table {
     width: 100%;
@@ -175,45 +211,102 @@
   }
   th {
     background: var(--gray-50);
-    padding: 12px 14px;
+    padding: 14px;
     text-align: left;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
     color: var(--gray-600);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.06em;
     border-bottom: 1px solid var(--gray-200);
   }
   td {
-    padding: 14px;
+    padding: 16px 14px;
     border-bottom: 1px solid var(--gray-100);
     font-size: 14px;
     color: var(--gray-800);
   }
   tr:last-child td { border-bottom: none; }
-  tr:hover { background: var(--gray-50); }
-  td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+  tbody tr:hover { background: var(--gray-50); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
   tfoot td { font-weight: 700; background: var(--gray-50); color: var(--gray-900); }
+
   .pill {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 4px 10px;
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 600;
-    background: var(--gray-100);
-    color: var(--gray-700);
+    font-weight: 700;
+    background: var(--primary-light);
+    color: var(--primary-dark);
   }
-  .pill.success { background: #d1fae5; color: #065f46; }
-  .pill.warning { background: #fef3c7; color: #92400e; }
+  .pill.success { background: var(--success-light); color: var(--success-dark); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray-500);
+  }
+  .empty-state .icon { font-size: 64px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-state h3 { font-size: 18px; color: var(--gray-700); margin-bottom: 8px; }
+  .empty-state p { margin-bottom: 20px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal {
+    background: white;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h3 { font-size: 18px; font-weight: 700; }
+  .modal-body { padding: 24px; }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--gray-100);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 0;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+  }
+  .close-btn:hover { background: var(--gray-100); color: var(--gray-700); }
 
   /* PAYSLIP */
   .payslip {
     max-width: 850px;
     margin: 0 auto;
     background: white;
-    border-radius: 12px;
-    padding: 40px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 14px;
+    padding: 48px;
+    box-shadow: var(--shadow-lg);
     border: 1px solid var(--gray-200);
   }
   .payslip-top {
@@ -221,85 +314,100 @@
     justify-content: space-between;
     align-items: flex-start;
     padding-bottom: 24px;
-    border-bottom: 2px solid var(--gray-100);
-    margin-bottom: 24px;
+    border-bottom: 3px solid var(--primary);
+    margin-bottom: 32px;
   }
   .payslip-company {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--gray-900);
     margin-bottom: 4px;
+    letter-spacing: -0.02em;
   }
-  .payslip-company-meta { font-size: 12px; color: var(--gray-500); }
+  .payslip-company-meta { font-size: 13px; color: var(--gray-500); }
   .payslip-stub {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(99,102,241,0.3);
   }
-  .payslip-section { margin-bottom: 24px; }
+  .payslip-section { margin-bottom: 28px; }
   .payslip-section h3 {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--gray-500);
-    font-weight: 600;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--gray-100);
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gray-100);
   }
   .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 24px;
   }
   .info-block { font-size: 13px; }
   .info-block .label { font-size: 10px; color: var(--gray-500); text-transform: uppercase;
-                       letter-spacing: 0.05em; font-weight: 600; margin-bottom: 2px; }
-  .info-block .value { color: var(--gray-900); font-weight: 500; margin-bottom: 10px; }
-  .payslip table { border: 1px solid var(--gray-200); border-radius: 8px; overflow: hidden; }
-  .payslip th { font-size: 11px; padding: 10px 12px; }
-  .payslip td { padding: 10px 12px; font-size: 13px; }
+                       letter-spacing: 0.06em; font-weight: 600; margin-bottom: 2px; margin-top: 12px; }
+  .info-block .label:first-child { margin-top: 0; }
+  .info-block .value { color: var(--gray-900); font-weight: 600; }
+  .payslip table { border: 1px solid var(--gray-200); border-radius: 10px; overflow: hidden; }
+  .payslip th { font-size: 11px; padding: 10px 12px; background: var(--gray-50); }
+  .payslip td { padding: 11px 12px; font-size: 13px; }
   .net-pay-box {
     background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
     color: white;
-    padding: 24px;
-    border-radius: 12px;
-    margin: 24px 0;
+    padding: 28px;
+    border-radius: 14px;
+    margin: 28px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
   }
-  .net-pay-box .label { font-size: 13px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-  .net-pay-box .amount { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  .net-pay-box .label { font-size: 13px; opacity: 0.95; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .net-pay-box .amount { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; }
   .nn-watermark {
     text-align: center;
     font-size: 11px;
     color: var(--gray-400);
-    letter-spacing: 0.3em;
-    margin: 24px 0 16px;
-    font-weight: 600;
+    letter-spacing: 0.4em;
+    margin: 28px 0 20px;
+    font-weight: 700;
   }
   .signature-block {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 32px;
     padding-top: 24px;
     border-top: 1px solid var(--gray-100);
   }
 
+  .help-banner {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #fbbf24;
+    color: #78350f;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .help-banner .icon { font-size: 20px; }
+
   @media print {
-    nav.tabs, header, footer, .no-print, .stat-grid { display: none !important; }
+    nav.tabs, header, footer, .no-print, .stat-grid, .help-banner { display: none !important; }
     body { background: white; }
     .card { box-shadow: none; border: none; padding: 0; }
     .payslip { box-shadow: none; border: none; padding: 0; max-width: 100%; }
-    .net-pay-box { background: var(--gray-100) !important; color: var(--gray-900) !important; }
-    .net-pay-box .amount { color: var(--gray-900) !important; }
   }
 
   footer {
@@ -308,12 +416,14 @@
     color: var(--gray-500);
     font-size: 12px;
   }
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: var(--gray-500);
+
+  @media (max-width: 768px) {
+    .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr; }
+    .signature-block { grid-template-columns: 1fr; }
+    .payslip { padding: 24px; }
+    .payslip-top { flex-direction: column; gap: 16px; }
   }
-  .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
 </style>
 </head>
 <body>
@@ -324,7 +434,7 @@
       <h1 id="companyName">Garderie La Belle Academie Inc.</h1>
       <div class="subtitle">Quebec Biweekly Payroll System</div>
     </div>
-    <div class="badge" id="yearBadge">Year 2026 · 26 pays/year</div>
+    <div class="badge">Year 2026 · 26 pays/year</div>
   </div>
 </header>
 
@@ -344,15 +454,16 @@
   <div id="view-employees" style="display:none"></div>
   <div id="view-period" style="display:none"></div>
   <div id="view-payslip" style="display:none"></div>
+  <div id="modal-container"></div>
 </main>
 
 <footer>
-  Quebec Payroll System &copy; 2026 — Runs entirely in your browser · Data saved locally
+  Quebec Payroll System &copy; 2026 — Runs in your browser · Data saved locally
 </footer>
 
 <script>
 // ============================================================================
-//  CONFIGURATION (embedded — no server needed)
+//  CONFIG (no server)
 // ============================================================================
 
 const COMPANY = {
@@ -366,29 +477,20 @@ const COMPANY = {
 const TAX_CONFIG = {
   year: 2026,
   federal: {
-    basic_personal_amount: 16452,
-    canada_employment_amount: 1471,
-    lowest_bracket_rate: 0.15,
-    credit_rate: 0.15,
-    quebec_abatement: 0.165,
+    basic_personal_amount: 16452, canada_employment_amount: 1471,
+    lowest_bracket_rate: 0.15, credit_rate: 0.15, quebec_abatement: 0.165,
     brackets: [
-      {upper: 57375,  rate: 0.15},
-      {upper: 114750, rate: 0.205},
-      {upper: 177882, rate: 0.26},
-      {upper: 253414, rate: 0.29},
+      {upper: 57375,  rate: 0.15}, {upper: 114750, rate: 0.205},
+      {upper: 177882, rate: 0.26}, {upper: 253414, rate: 0.29},
       {upper: null,   rate: 0.33}
     ]
   },
   quebec: {
     basic_personal_amount: 18952,
-    worker_deduction_rate: 0.06,
-    worker_deduction_max: 1420,
-    credit_rate: 0.14,
+    worker_deduction_rate: 0.06, worker_deduction_max: 1420, credit_rate: 0.14,
     brackets: [
-      {upper: 53255,  rate: 0.14},
-      {upper: 106495, rate: 0.19},
-      {upper: 129590, rate: 0.24},
-      {upper: null,   rate: 0.2575}
+      {upper: 53255,  rate: 0.14}, {upper: 106495, rate: 0.19},
+      {upper: 129590, rate: 0.24}, {upper: null,   rate: 0.2575}
     ]
   },
   ei:   { ee_rate: 0.013,  er_multiplier: 1.4, annual_max_insurable: 68900 },
@@ -398,7 +500,8 @@ const TAX_CONFIG = {
   csst: { rate: 0.0177, annual_max_insurable: 88000 }
 };
 
-const EMPLOYEES = [
+// Default employees (seeded; user can override via Employees tab)
+const DEFAULT_EMPLOYEES = [
   {code:"A1",  first_name:"Hooma",    last_name:"Mohammad",  hire_date:"2023-04-17", sin:"540 474 749", employee_id:"8PB1033", department:"04GHBB DPT", occupation:"Carer", address_line_1:"2936 Rue Alfred De-Musset", city:"Laval", province:"QC", postal_code:"H7P 6E8", rate_per_hour:25.00, vacation_rate:0.06, federal_td1_claim:16452, provincial_td1_claim:18952, active:true},
   {code:"A6",  first_name:"Nadin",    last_name:"Al Katan",  hire_date:"2023-08-28", sin:"295 781 694", employee_id:"8PB1038", department:"04GHBB DPT", occupation:"Carer", address_line_1:"391 Rue Dolores", city:"Laval", province:"QC", postal_code:"", date_of_birth:"1980-09-11", rate_per_hour:18.00, vacation_rate:0.04, federal_td1_claim:16452, provincial_td1_claim:18952, active:true},
   {code:"A8",  first_name:"Lana",     last_name:"Aldamman",  hire_date:"2024-02-01", sin:"", employee_id:"8PB1040", department:"04GHBB DPT", occupation:"Carer", address_line_1:"601-805 Boul Chomeday", city:"Laval", province:"QC", postal_code:"", rate_per_hour:25.00, vacation_rate:0.06, federal_td1_claim:16452, provincial_td1_claim:18952, tax_exempt_ei:true, active:true},
@@ -416,12 +519,27 @@ const EMPLOYEES = [
 // ============================================================================
 
 const STORAGE_KEY = "payroll_history_2026";
+const EMP_STORAGE_KEY = "payroll_employees_2026";
+
+function loadEmployees() {
+  const raw = localStorage.getItem(EMP_STORAGE_KEY);
+  if (raw) {
+    try { return JSON.parse(raw); }
+    catch (e) { return [...DEFAULT_EMPLOYEES]; }
+  }
+  return [...DEFAULT_EMPLOYEES];
+}
+function saveEmployees(list) {
+  localStorage.setItem(EMP_STORAGE_KEY, JSON.stringify(list));
+}
+function getEmployees() { return loadEmployees(); }
+function getActiveEmployees() { return getEmployees().filter(e => e.active); }
+function getEmployee(code) { return getEmployees().find(e => e.code === code); }
 
 function loadHistory() {
   const raw = localStorage.getItem(STORAGE_KEY);
   return raw ? JSON.parse(raw) : [];
 }
-
 function saveHistory(history) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 }
@@ -440,9 +558,7 @@ function ytdBefore(empCode, periodEnd) {
   history.forEach(p => {
     if (p.period.pay_end_date < periodEnd) {
       const row = p.results.find(r => r.employee_code === empCode);
-      if (row) {
-        Object.keys(totals).forEach(k => { totals[k] += (row[k] || 0); });
-      }
+      if (row) Object.keys(totals).forEach(k => { totals[k] += (row[k] || 0); });
     }
   });
   return totals;
@@ -458,9 +574,7 @@ function fmt(v) {
 }
 
 function calculateBracket(annualIncome, brackets) {
-  let tax = 0;
-  let remaining = annualIncome;
-  let lastUpper = 0;
+  let tax = 0, remaining = annualIncome, lastUpper = 0;
   for (const b of brackets) {
     const upper = b.upper === null ? Infinity : b.upper;
     const slice = Math.min(remaining, upper - lastUpper);
@@ -477,7 +591,6 @@ function calculateFederalTax(grossThisPeriod, employee, periods) {
   const cfg = TAX_CONFIG.federal;
   const annual = grossThisPeriod * periods;
   const taxOnIncome = calculateBracket(annual, cfg.brackets);
-
   const bpa = employee.federal_td1_claim || cfg.basic_personal_amount;
   const cea = cfg.canada_employment_amount;
   const ei = Math.min(grossThisPeriod * TAX_CONFIG.ei.ee_rate * periods,
@@ -486,11 +599,9 @@ function calculateFederalTax(grossThisPeriod, employee, periods) {
                          TAX_CONFIG.qpip.annual_max_insurable * TAX_CONFIG.qpip.ee_rate);
   const qpp = Math.min((annual - TAX_CONFIG.qpp.basic_exemption_annual) * TAX_CONFIG.qpp.ee_rate,
                         (TAX_CONFIG.qpp.annual_max_pensionable - TAX_CONFIG.qpp.basic_exemption_annual) * TAX_CONFIG.qpp.ee_rate);
-
   const credits = (bpa + cea + ei + qpip + Math.max(0, qpp)) * cfg.credit_rate;
   const netFed = Math.max(0, taxOnIncome - credits);
   const afterAbatement = netFed * (1 - cfg.quebec_abatement);
-
   return Math.max(0, afterAbatement / periods + (employee.additional_federal_tax || 0));
 }
 
@@ -498,30 +609,21 @@ function calculateQuebecTax(grossThisPeriod, employee, periods) {
   const cfg = TAX_CONFIG.quebec;
   const annual = grossThisPeriod * periods;
   const taxOnIncome = calculateBracket(annual, cfg.brackets);
-
   const bpa = employee.provincial_td1_claim || cfg.basic_personal_amount;
   const workerDed = Math.min(annual * cfg.worker_deduction_rate, cfg.worker_deduction_max);
-
   const credits = bpa * cfg.credit_rate;
   const netQc = Math.max(0, taxOnIncome - workerDed - credits);
-
   return Math.max(0, netQc / periods + (employee.additional_quebec_tax || 0));
 }
 
 function calculatePay(employee, hours, periodEnd) {
   const rate = employee.rate_per_hour;
   const periods = COMPANY.pay_periods_per_year;
-
-  const reg_hrs = hours.regular || 0;
-  const reg_amt = reg_hrs * rate;
-  const hol_hrs = hours.holiday_paid || 0;
-  const hol_amt = hol_hrs * rate;
-  const vac_hrs = hours.vacation_paid || 0;
-  const vac_amt = vac_hrs * rate;
+  const reg_hrs = hours.regular || 0, reg_amt = reg_hrs * rate;
+  const hol_hrs = hours.holiday_paid || 0, hol_amt = hol_hrs * rate;
+  const vac_hrs = hours.vacation_paid || 0, vac_amt = vac_hrs * rate;
   const spec_amt = hours.special || 0;
-  const mat_hrs = hours.maternity || 0;
-  const mat_amt = mat_hrs * rate;
-
+  const mat_hrs = hours.maternity || 0, mat_amt = mat_hrs * rate;
   const gross = reg_amt + hol_amt + vac_amt + spec_amt + mat_amt;
   const ytd = ytdBefore(employee.code, periodEnd);
 
@@ -533,7 +635,6 @@ function calculatePay(employee, hours, periodEnd) {
     qpp_ee = pens_capped * TAX_CONFIG.qpp.ee_rate;
     qpp_er = pens_capped * TAX_CONFIG.qpp.er_rate;
   }
-
   let ei_ee = 0, ei_er = 0;
   if (!employee.tax_exempt_ei && ytd.gross < TAX_CONFIG.ei.annual_max_insurable) {
     const cap_remain = TAX_CONFIG.ei.annual_max_insurable - ytd.gross;
@@ -541,7 +642,6 @@ function calculatePay(employee, hours, periodEnd) {
     ei_ee = ins * TAX_CONFIG.ei.ee_rate;
     ei_er = ei_ee * TAX_CONFIG.ei.er_multiplier;
   }
-
   let qpip_ee = 0, qpip_er = 0;
   if (ytd.gross < TAX_CONFIG.qpip.annual_max_insurable) {
     const cap_remain = TAX_CONFIG.qpip.annual_max_insurable - ytd.gross;
@@ -549,16 +649,13 @@ function calculatePay(employee, hours, periodEnd) {
     qpip_ee = ins * TAX_CONFIG.qpip.ee_rate;
     qpip_er = ins * TAX_CONFIG.qpip.er_rate;
   }
-
   const fss = gross * TAX_CONFIG.fss.rate;
-
   let csst = 0;
   if (ytd.gross < TAX_CONFIG.csst.annual_max_insurable) {
     const cap_remain = TAX_CONFIG.csst.annual_max_insurable - ytd.gross;
     const ins = Math.min(gross, cap_remain);
     csst = ins * TAX_CONFIG.csst.rate;
   }
-
   const fed_tax = employee.tax_exempt_federal ? 0 : calculateFederalTax(gross, employee, periods);
   const qc_tax = employee.tax_exempt_quebec ? 0 : calculateQuebecTax(gross, employee, periods);
   const vac_accrual = gross * employee.vacation_rate;
@@ -574,32 +671,25 @@ function calculatePay(employee, hours, periodEnd) {
     maternity_hours: mat_hrs, maternity_amount: mat_amt,
     gross, federal_tax: fed_tax, quebec_tax: qc_tax,
     ei_ee, ei_er, qpip_ee, qpip_er, qpp_ee, qpp_er,
-    fss, csst, total_deductions, net_pay, vacation_accrual,
-    ytd
+    fss, csst, total_deductions, net_pay, vacation_accrual, ytd
   };
 }
 
 function runPeriod(periodEnd, payDate, hoursByEmp) {
   const history = loadHistory();
   const prevCount = history.filter(p => p.period.pay_end_date < periodEnd).length;
-
   const period = {
-    pay_end_date: periodEnd,
-    payment_date: payDate,
-    pay_number: prevCount + 1,
-    year: parseInt(periodEnd.substring(0, 4))
+    pay_end_date: periodEnd, payment_date: payDate,
+    pay_number: prevCount + 1, year: parseInt(periodEnd.substring(0, 4))
   };
-
-  const results = EMPLOYEES.filter(e => e.active).map(emp => {
+  const results = getActiveEmployees().map(emp => {
     const hours = hoursByEmp[emp.code] || {};
     return calculatePay(emp, hours, periodEnd);
   });
-
   const record = {period, results};
   const existingIdx = history.findIndex(p => p.period.pay_end_date === periodEnd);
-  if (existingIdx >= 0) {
-    history[existingIdx] = record;
-  } else {
+  if (existingIdx >= 0) history[existingIdx] = record;
+  else {
     history.push(record);
     history.sort((a, b) => a.period.pay_end_date.localeCompare(b.period.pay_end_date));
   }
@@ -616,9 +706,9 @@ function showView(view) {
     const el = document.getElementById(`view-${v}`);
     if (el) el.style.display = v === view ? '' : 'none';
   });
-  // Active tab highlighting
   const tabMap = {dashboard:'navDashboard', newPeriod:'navNewPeriod', payslips:'navPayslips',
-                   history:'navHistory', employees:'navEmployees', period:'navHistory', payslip:'navPayslips'};
+                   history:'navHistory', employees:'navEmployees',
+                   period:'navHistory', payslip:'navPayslips'};
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
   const activeBtn = document.getElementById(tabMap[view]);
   if (activeBtn) activeBtn.classList.add('active');
@@ -634,17 +724,26 @@ function showView(view) {
 
 function renderDashboard() {
   const history = loadHistory();
-  const active = EMPLOYEES.filter(e => e.active).length;
+  const active = getActiveEmployees().length;
   const ytdGross = history.reduce((s, p) => s + p.results.reduce((a, r) => a + r.gross, 0), 0);
   const ytdNet = history.reduce((s, p) => s + p.results.reduce((a, r) => a + r.net_pay, 0), 0);
 
   document.getElementById('view-dashboard').innerHTML = `
+    ${history.length === 0 ? `
+      <div class="help-banner">
+        <span class="icon">👋</span>
+        <div>
+          <strong>Welcome!</strong> To get started: <strong>1)</strong> Check the <em>Employees</em> tab and add addresses, <strong>2)</strong> Click <em>New Period</em> to enter hours, <strong>3)</strong> View generated <em>Payslips</em>.
+        </div>
+      </div>
+    ` : ''}
+
     <div class="stat-grid">
       <div class="stat">
         <div class="label">Active Employees</div>
         <div class="value primary">${active}</div>
       </div>
-      <div class="stat">
+      <div class="stat success">
         <div class="label">Pay Periods Run</div>
         <div class="value">${history.length}</div>
       </div>
@@ -652,7 +751,7 @@ function renderDashboard() {
         <div class="label">YTD Gross Payroll</div>
         <div class="value">$${fmt(ytdGross)}</div>
       </div>
-      <div class="stat">
+      <div class="stat success">
         <div class="label">YTD Net Paid</div>
         <div class="value success">$${fmt(ytdNet)}</div>
       </div>
@@ -662,8 +761,9 @@ function renderDashboard() {
       <h2><span class="icon">🚀</span> Quick Actions</h2>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         <button class="primary" onclick="showView('newPeriod')">📝 Enter New Pay Period</button>
-        <button class="secondary" onclick="showView('payslips')">📄 View Payslips</button>
-        <button class="secondary" onclick="showView('history')">🗂 Payroll History</button>
+        <button class="success" onclick="showView('payslips')">📄 View Payslips</button>
+        <button class="secondary" onclick="showView('employees')">👥 Manage Employees</button>
+        <button class="secondary" onclick="showView('history')">🗂 History</button>
       </div>
     </div>
 
@@ -682,21 +782,14 @@ function renderDashboard() {
                   <td><span class="pill">#${p.period.pay_number}</span></td>
                   <td>${p.period.payment_date}</td>
                   <td class="num">$${fmt(tg)}</td>
-                  <td class="num" style="color:var(--success);font-weight:600;">$${fmt(tn)}</td>
+                  <td class="num" style="color:var(--success);">$${fmt(tn)}</td>
                   <td><button class="primary small" onclick="viewPeriod('${p.period.pay_end_date}')">View →</button></td>
                 </tr>`;
             }).join('')}
           </tbody>
         </table>
       </div>
-    ` : `
-      <div class="card empty-state">
-        <div class="icon">📭</div>
-        <h3>No pay periods yet</h3>
-        <p style="margin:8px 0 16px;">Get started by entering your first pay period.</p>
-        <button class="primary" onclick="showView('newPeriod')">📝 Start New Pay Period</button>
-      </div>
-    `}
+    ` : ''}
   `;
 }
 
@@ -704,7 +797,7 @@ function renderNewPeriod() {
   const today = new Date();
   const defaultEnd = today.toISOString().split('T')[0];
   const payDate = new Date(today.getTime() + 6 * 86400000).toISOString().split('T')[0];
-  const active = EMPLOYEES.filter(e => e.active);
+  const active = getActiveEmployees();
 
   document.getElementById('view-newPeriod').innerHTML = `
     <div class="card">
@@ -723,17 +816,14 @@ function renderNewPeriod() {
 
     <div class="card">
       <h2><span class="icon">⏱</span> Enter Hours Worked</h2>
-      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">Enter hours for each employee. Leave at 0 if no hours worked.</p>
+      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">Enter hours for each employee. Tab to move between fields.</p>
+      <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th>Employee</th>
-            <th>Rate</th>
-            <th>Regular</th>
-            <th>Holiday</th>
-            <th>Vacation</th>
-            <th>Special $</th>
-            <th>Maternity</th>
+            <th>Employee</th><th>Rate</th>
+            <th>Regular</th><th>Holiday</th><th>Vacation</th>
+            <th>Special $</th><th>Maternity</th>
           </tr>
         </thead>
         <tbody>
@@ -741,20 +831,21 @@ function renderNewPeriod() {
             <tr>
               <td>
                 <div style="font-weight:600;">${emp.first_name} ${emp.last_name}</div>
-                <div style="font-size:11px;color:var(--gray-500);">${emp.code} · ${emp.occupation}</div>
+                <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">${emp.code} · ${emp.occupation}</div>
               </td>
               <td class="num">$${emp.rate_per_hour.toFixed(2)}</td>
-              <td><input type="number" id="reg_${emp.code}" step="0.25" value="0" style="width:90px"></td>
-              <td><input type="number" id="hol_${emp.code}" step="0.25" value="0" style="width:90px"></td>
-              <td><input type="number" id="vac_${emp.code}" step="0.25" value="0" style="width:90px"></td>
-              <td><input type="number" id="spec_${emp.code}" step="0.01" value="0" style="width:90px"></td>
-              <td><input type="number" id="mat_${emp.code}" step="0.25" value="0" style="width:90px"></td>
+              <td><input type="number" id="reg_${emp.code}" step="0.25" value="0" style="width:90px;padding:8px 10px;"></td>
+              <td><input type="number" id="hol_${emp.code}" step="0.25" value="0" style="width:90px;padding:8px 10px;"></td>
+              <td><input type="number" id="vac_${emp.code}" step="0.25" value="0" style="width:90px;padding:8px 10px;"></td>
+              <td><input type="number" id="spec_${emp.code}" step="0.01" value="0" style="width:90px;padding:8px 10px;"></td>
+              <td><input type="number" id="mat_${emp.code}" step="0.25" value="0" style="width:90px;padding:8px 10px;"></td>
             </tr>
           `).join('')}
         </tbody>
       </table>
+      </div>
       <div style="margin-top:24px;display:flex;gap:12px;">
-        <button class="success" onclick="submitPayPeriod()">▶ Calculate Payroll</button>
+        <button class="success" onclick="submitPayPeriod()">▶ Calculate Payroll &amp; Generate Payslips</button>
         <button class="secondary" onclick="showView('dashboard')">Cancel</button>
       </div>
     </div>
@@ -773,12 +864,8 @@ function updatePayDate() {
 function submitPayPeriod() {
   const periodEnd = document.getElementById('periodEnd').value;
   const payDate = document.getElementById('payDate').value;
-  if (!periodEnd || !payDate) {
-    alert('Please enter both period end and payment dates');
-    return;
-  }
-
-  const active = EMPLOYEES.filter(e => e.active);
+  if (!periodEnd || !payDate) { alert('Please enter both period end and payment dates'); return; }
+  const active = getActiveEmployees();
   const hoursByEmp = {};
   active.forEach(emp => {
     hoursByEmp[emp.code] = {
@@ -789,7 +876,6 @@ function submitPayPeriod() {
       maternity: parseFloat(document.getElementById(`mat_${emp.code}`).value || 0),
     };
   });
-
   runPeriod(periodEnd, payDate, hoursByEmp);
   viewPeriod(periodEnd);
 }
@@ -801,36 +887,29 @@ function renderPayslipsList() {
       <div class="card empty-state">
         <div class="icon">📄</div>
         <h3>No payslips yet</h3>
-        <p style="margin:8px 0 16px;">Run a pay period first to generate payslips.</p>
+        <p>Payslips are created automatically when you run a pay period.<br>
+           Click below to enter hours and generate your first payslips.</p>
         <button class="primary" onclick="showView('newPeriod')">📝 Start New Pay Period</button>
       </div>
     `;
     return;
   }
 
-  // Show payslips by employee, grouped by period
-  const lastPeriod = history[history.length - 1];
   const allPeriods = [...history].reverse();
-
   document.getElementById('view-payslips').innerHTML = `
     <div class="card">
       <h2><span class="icon">📄</span> Employee Payslips</h2>
-      <div class="form-row">
-        <div>
-          <label>Pay Period</label>
-          <select id="payslipPeriodSelect" onchange="renderPayslipsList()">
-            ${allPeriods.map((p, i) => `
-              <option value="${p.period.pay_end_date}">${p.period.pay_end_date} · Pay #${p.period.pay_number}</option>
-            `).join('')}
-          </select>
-        </div>
-      </div>
+      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">Select a pay period to view individual employee payslips.</p>
+      <label>Pay Period</label>
+      <select id="payslipPeriodSelect">
+        ${allPeriods.map(p => `
+          <option value="${p.period.pay_end_date}">${p.period.pay_end_date} · Pay #${p.period.pay_number} · ${p.period.payment_date}</option>
+        `).join('')}
+      </select>
     </div>
-
     <div id="payslipsContent"></div>
   `;
 
-  // Wire up selector
   const select = document.getElementById('payslipPeriodSelect');
   select.onchange = () => updatePayslipsContent(select.value);
   updatePayslipsContent(allPeriods[0].period.pay_end_date);
@@ -840,24 +919,23 @@ function updatePayslipsContent(periodEnd) {
   const history = loadHistory();
   const rec = history.find(p => p.period.pay_end_date === periodEnd);
   if (!rec) return;
+  const employees = getEmployees();
 
-  const html = `
+  document.getElementById('payslipsContent').innerHTML = `
     <div class="card">
       <h2><span class="icon">👥</span> Payslips for ${rec.period.pay_end_date}</h2>
       <table>
         <thead>
-          <tr>
-            <th>Employee</th><th>Gross</th><th>Total Tax</th><th>Net Pay</th><th></th>
-          </tr>
+          <tr><th>Employee</th><th>Gross</th><th>Total Tax</th><th>Net Pay</th><th></th></tr>
         </thead>
         <tbody>
           ${rec.results.filter(r => r.gross > 0).map(r => {
-            const emp = EMPLOYEES.find(e => e.code === r.employee_code);
+            const emp = employees.find(e => e.code === r.employee_code);
             return `
               <tr>
                 <td>
                   <div style="font-weight:600;">${emp ? emp.first_name + ' ' + emp.last_name : r.employee_code}</div>
-                  <div style="font-size:11px;color:var(--gray-500);">${r.employee_code} · ${emp ? emp.occupation : ''}</div>
+                  <div style="font-size:11px;color:var(--gray-500);margin-top:2px;">${r.employee_code} · ${emp ? emp.occupation : ''}</div>
                 </td>
                 <td class="num">$${fmt(r.gross)}</td>
                 <td class="num">$${fmt(r.total_deductions)}</td>
@@ -869,14 +947,13 @@ function updatePayslipsContent(periodEnd) {
       </table>
     </div>
   `;
-  document.getElementById('payslipsContent').innerHTML = html;
 }
 
 function viewPeriod(periodEnd) {
   const history = loadHistory();
   const rec = history.find(p => p.period.pay_end_date === periodEnd);
   if (!rec) { alert('Period not found'); return; }
-
+  const employees = getEmployees();
   const totalGross = rec.results.reduce((s, r) => s + r.gross, 0);
   const totalNet = rec.results.reduce((s, r) => s + r.net_pay, 0);
   const totalDed = rec.results.reduce((s, r) => s + r.total_deductions, 0);
@@ -888,26 +965,15 @@ function viewPeriod(periodEnd) {
         Payment date: <strong>${rec.period.payment_date}</strong> · Pay #${rec.period.pay_number} of ${COMPANY.pay_periods_per_year}
       </p>
       <button class="secondary" onclick="showView('dashboard')">← Dashboard</button>
-      <button class="primary" onclick="window.print()" style="margin-left:8px;">🖨 Print All</button>
+      <button class="success" onclick="showView('payslips')" style="margin-left:8px;">📄 View Payslips</button>
+      <button class="primary" onclick="window.print()" style="margin-left:8px;">🖨 Print Summary</button>
     </div>
 
     <div class="stat-grid">
-      <div class="stat">
-        <div class="label">Total Gross</div>
-        <div class="value primary">$${fmt(totalGross)}</div>
-      </div>
-      <div class="stat">
-        <div class="label">Total Deductions</div>
-        <div class="value">$${fmt(totalDed)}</div>
-      </div>
-      <div class="stat">
-        <div class="label">Total Net Pay</div>
-        <div class="value success">$${fmt(totalNet)}</div>
-      </div>
-      <div class="stat">
-        <div class="label">Employees Paid</div>
-        <div class="value">${rec.results.filter(r => r.gross > 0).length}</div>
-      </div>
+      <div class="stat"><div class="label">Total Gross</div><div class="value primary">$${fmt(totalGross)}</div></div>
+      <div class="stat"><div class="label">Total Deductions</div><div class="value">$${fmt(totalDed)}</div></div>
+      <div class="stat success"><div class="label">Total Net Pay</div><div class="value success">$${fmt(totalNet)}</div></div>
+      <div class="stat"><div class="label">Employees Paid</div><div class="value">${rec.results.filter(r => r.gross > 0).length}</div></div>
     </div>
 
     <div class="card">
@@ -920,7 +986,7 @@ function viewPeriod(periodEnd) {
         </tr></thead>
         <tbody>
           ${rec.results.filter(r => r.gross > 0).map(r => {
-            const emp = EMPLOYEES.find(e => e.code === r.employee_code);
+            const emp = employees.find(e => e.code === r.employee_code);
             return `
               <tr>
                 <td><strong>${emp ? emp.first_name + ' ' + emp.last_name : r.employee_code}</strong></td>
@@ -932,7 +998,7 @@ function viewPeriod(periodEnd) {
                 <td class="num">$${fmt(r.qpp_ee)}</td>
                 <td class="num" style="font-weight:700;color:var(--success);">$${fmt(r.net_pay)}</td>
                 <td class="num">$${fmt(r.vacation_accrual)}</td>
-                <td><button class="primary small" onclick="showPayslip('${periodEnd}','${r.employee_code}')">📄 Payslip</button></td>
+                <td><button class="primary small" onclick="showPayslip('${periodEnd}','${r.employee_code}')">📄</button></td>
               </tr>`;
           }).join('')}
         </tbody>
@@ -962,7 +1028,7 @@ function showPayslip(periodEnd, empCode) {
   const rec = history.find(p => p.period.pay_end_date === periodEnd);
   if (!rec) return;
   const r = rec.results.find(x => x.employee_code === empCode);
-  const emp = EMPLOYEES.find(e => e.code === empCode);
+  const emp = getEmployee(empCode);
   if (!r || !emp) return;
 
   const ytdGross = (r.ytd.gross || 0) + r.gross;
@@ -985,8 +1051,11 @@ function showPayslip(periodEnd, empCode) {
   const ytdMatHrs = (r.ytd.maternity_hours || 0) + r.maternity_hours;
   const ytdMatAmt = (r.ytd.maternity_amount || 0) + r.maternity_amount;
 
+  const fullAddr = [emp.address_line_1, emp.address_line_2].filter(Boolean).join(', ');
+  const cityLine = [emp.city, emp.province, emp.postal_code].filter(Boolean).join(' ');
+
   document.getElementById('view-payslip').innerHTML = `
-    <div class="no-print" style="margin-bottom:16px;display:flex;gap:8px;">
+    <div class="no-print" style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;">
       <button class="secondary" onclick="showView('payslips')">← Back to Payslips</button>
       <button class="primary" onclick="window.print()">🖨 Print / Save as PDF</button>
     </div>
@@ -1004,7 +1073,7 @@ function showPayslip(periodEnd, empCode) {
         <h3>Statement of Earnings and Deductions</h3>
         <div class="info-grid">
           <div class="info-block">
-            <div class="label">Employee</div>
+            <div class="label">Employee Name</div>
             <div class="value">${emp.first_name} ${emp.last_name}</div>
             <div class="label">Employee ID</div>
             <div class="value">${emp.employee_id || '—'}</div>
@@ -1060,11 +1129,7 @@ function showPayslip(periodEnd, empCode) {
         <h3>Deductions</h3>
         <table>
           <thead>
-            <tr>
-              <th>Description</th>
-              <th style="text-align:right;">Current</th>
-              <th style="text-align:right;">YTD</th>
-            </tr>
+            <tr><th>Description</th><th style="text-align:right;">Current</th><th style="text-align:right;">YTD</th></tr>
           </thead>
           <tbody>
             <tr><td>QPP (Quebec Pension Plan)</td><td class="num">$${fmt(r.qpp_ee)}</td><td class="num">$${fmt(ytdQpp)}</td></tr>
@@ -1082,7 +1147,7 @@ function showPayslip(periodEnd, empCode) {
       <div class="net-pay-box">
         <div>
           <div class="label">Net Pay This Period</div>
-          <div style="font-size:11px;opacity:0.85;margin-top:2px;">YTD Net: $${fmt(ytdNet)}</div>
+          <div style="font-size:11px;opacity:0.9;margin-top:4px;">YTD Net: $${fmt(ytdNet)}</div>
         </div>
         <div class="amount">$${fmt(r.net_pay)}</div>
       </div>
@@ -1114,16 +1179,16 @@ function showPayslip(periodEnd, empCode) {
       <div class="signature-block">
         <div class="info-block">
           <div class="label">Employee Address</div>
-          <div class="value" style="margin-bottom:2px;">${emp.first_name} ${emp.last_name}</div>
-          <div style="font-size:12px;color:var(--gray-600);">
-            ${emp.address_line_1 || ''}<br>
-            ${emp.city || ''} ${emp.province} ${emp.postal_code || ''}
+          <div class="value" style="margin-bottom:4px;">${emp.first_name} ${emp.last_name}</div>
+          <div style="font-size:13px;color:var(--gray-600);line-height:1.6;">
+            ${fullAddr || '<em style="color:var(--gray-400);">No address on file</em>'}<br>
+            ${cityLine}
           </div>
         </div>
         <div class="info-block" style="text-align:right;">
           <div class="label">Employer</div>
-          <div class="value" style="margin-bottom:2px;">${COMPANY.name}</div>
-          <div style="font-size:12px;color:var(--gray-600);">Department: ${emp.department || '—'}</div>
+          <div class="value" style="margin-bottom:4px;">${COMPANY.name}</div>
+          <div style="font-size:13px;color:var(--gray-600);">Department: ${emp.department || '—'}</div>
         </div>
       </div>
     </div>
@@ -1137,10 +1202,7 @@ function renderHistory() {
     <div class="card">
       <h2><span class="icon">🗂</span> Pay Period History</h2>
       ${history.length === 0 ? `
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <p>No pay periods yet.</p>
-        </div>
+        <div class="empty-state"><div class="icon">📭</div><p>No pay periods yet.</p></div>
       ` : `
         <table>
           <thead><tr><th>Period End</th><th>Pay #</th><th>Pay Date</th><th>Gross</th><th>Net</th><th>Employees</th><th></th></tr></thead>
@@ -1169,41 +1231,36 @@ function renderHistory() {
     </div>
 
     <div class="card">
-      <h2><span class="icon">💾</span> Backup & Restore</h2>
+      <h2><span class="icon">💾</span> Backup &amp; Restore</h2>
       <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
-        Data is stored in your browser. Export regularly to back up to a file you control.
+        Data is stored in your browser. Export regularly to back up.
       </p>
       <button class="secondary" onclick="exportData()">📥 Export All Data</button>
       <button class="secondary" onclick="document.getElementById('importFile').click()" style="margin-left:8px;">📤 Import Data</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-      <button class="danger" onclick="clearAllData()" style="margin-left:8px;">🗑 Clear All</button>
+      <button class="danger" onclick="clearAllData()" style="margin-left:8px;">🗑 Clear All History</button>
     </div>
   `;
 }
 
 function deletePeriod(periodEnd) {
   if (!confirm(`Delete pay period ${periodEnd}? This cannot be undone.`)) return;
-  const history = loadHistory().filter(p => p.period.pay_end_date !== periodEnd);
-  saveHistory(history);
+  saveHistory(loadHistory().filter(p => p.period.pay_end_date !== periodEnd));
   renderHistory();
 }
-
 function clearAllData() {
   if (!confirm('Clear ALL payroll history? This cannot be undone.')) return;
   localStorage.removeItem(STORAGE_KEY);
   renderHistory();
 }
-
 function exportData() {
-  const data = loadHistory();
+  const data = {history: loadHistory(), employees: loadEmployees()};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `payroll_history_${COMPANY.payroll_year}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.href = url; a.download = `payroll_backup_${COMPANY.payroll_year}.json`;
+  a.click(); URL.revokeObjectURL(url);
 }
-
 function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -1211,40 +1268,200 @@ function importData(event) {
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data)) throw new Error('Invalid format');
-      if (!confirm(`Replace current history with ${data.length} period(s)?`)) return;
-      saveHistory(data);
+      // Support both new format and old (array only)
+      const hist = Array.isArray(data) ? data : data.history;
+      const emps = data.employees;
+      if (!Array.isArray(hist)) throw new Error('Invalid format');
+      if (!confirm(`Replace data with ${hist.length} period(s)${emps ? ' and ' + emps.length + ' employees' : ''}?`)) return;
+      saveHistory(hist);
+      if (emps) saveEmployees(emps);
       renderHistory();
       alert('✅ Data imported');
-    } catch (err) {
-      alert('❌ Invalid file: ' + err.message);
-    }
+    } catch (err) { alert('❌ Invalid file: ' + err.message); }
   };
   reader.readAsText(file);
 }
 
+// ============================================================================
+//  EMPLOYEES (with edit/add/address)
+// ============================================================================
+
 function renderEmployees() {
+  const list = getEmployees();
   document.getElementById('view-employees').innerHTML = `
     <div class="card">
-      <h2><span class="icon">👥</span> Active Employees</h2>
+      <h2><span class="icon">👥</span> Manage Employees</h2>
+      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
+        Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.
+      </p>
+      <button class="primary" onclick="openEmployeeModal()">+ Add New Employee</button>
+      <button class="secondary" onclick="resetEmployees()" style="margin-left:8px;">↺ Reset to Defaults</button>
+    </div>
+
+    <div class="card">
+      <h2><span class="icon">📋</span> Employee List</h2>
       <table>
-        <thead><tr><th>Code</th><th>Name</th><th>Occupation</th><th>Rate/hr</th><th>Vac %</th><th>Hire Date</th><th>SIN</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Code</th><th>Name</th><th>Occupation</th><th>Rate/hr</th>
+            <th>Vac %</th><th>Address</th><th>Status</th><th></th>
+          </tr>
+        </thead>
         <tbody>
-          ${EMPLOYEES.filter(e => e.active).map(e => `
+          ${list.map(e => `
             <tr>
               <td><span class="pill">${e.code}</span></td>
               <td><strong>${e.first_name} ${e.last_name}</strong></td>
-              <td>${e.occupation}</td>
-              <td class="num">$${e.rate_per_hour.toFixed(2)}</td>
-              <td class="num">${(e.vacation_rate * 100).toFixed(0)}%</td>
-              <td>${e.hire_date}</td>
-              <td>${e.sin || '—'}</td>
+              <td>${e.occupation || '—'}</td>
+              <td class="num">$${(e.rate_per_hour || 0).toFixed(2)}</td>
+              <td class="num">${((e.vacation_rate || 0) * 100).toFixed(0)}%</td>
+              <td style="font-size:12px;color:var(--gray-600);">
+                ${e.address_line_1 || '<em style="color:var(--gray-400);">No address</em>'}<br>
+                ${[e.city, e.province, e.postal_code].filter(Boolean).join(' ')}
+              </td>
+              <td>${e.active ? '<span class="pill success">Active</span>' : '<span class="pill">Inactive</span>'}</td>
+              <td>
+                <button class="primary small" onclick="openEmployeeModal('${e.code}')">✏️ Edit</button>
+              </td>
             </tr>
           `).join('')}
         </tbody>
       </table>
     </div>
   `;
+}
+
+function resetEmployees() {
+  if (!confirm('Reset employee list to defaults? Your custom employee changes will be lost.')) return;
+  localStorage.removeItem(EMP_STORAGE_KEY);
+  renderEmployees();
+}
+
+function openEmployeeModal(code) {
+  const list = getEmployees();
+  const isEdit = !!code;
+  const emp = isEdit ? list.find(e => e.code === code) : {
+    code: 'A' + (Math.max(0, ...list.map(x => parseInt((x.code || 'A0').replace(/\D/g, '')) || 0)) + 1),
+    first_name: '', last_name: '', occupation: 'Carer', department: '',
+    hire_date: new Date().toISOString().split('T')[0],
+    sin: '', employee_id: '',
+    address_line_1: '', address_line_2: '', city: '', province: 'QC', postal_code: '',
+    rate_per_hour: 18.00, vacation_rate: 0.04,
+    federal_td1_claim: 16452, provincial_td1_claim: 18952,
+    additional_federal_tax: 0, additional_quebec_tax: 0,
+    tax_exempt_ei: false, active: true
+  };
+
+  document.getElementById('modal-container').innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>${isEdit ? '✏️ Edit Employee' : '+ Add New Employee'}</h3>
+          <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <h4 style="font-size:13px;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">Personal Info</h4>
+          <div class="form-row">
+            <div><label>Code</label><input id="emp_code" value="${emp.code}" ${isEdit ? 'readonly' : ''}></div>
+            <div><label>Employee ID</label><input id="emp_employee_id" value="${emp.employee_id || ''}"></div>
+          </div>
+          <div class="form-row">
+            <div><label>First Name</label><input id="emp_first_name" value="${emp.first_name || ''}"></div>
+            <div><label>Last Name</label><input id="emp_last_name" value="${emp.last_name || ''}"></div>
+          </div>
+          <div class="form-row">
+            <div><label>Occupation</label><input id="emp_occupation" value="${emp.occupation || ''}"></div>
+            <div><label>Department</label><input id="emp_department" value="${emp.department || ''}"></div>
+          </div>
+          <div class="form-row">
+            <div><label>SIN</label><input id="emp_sin" value="${emp.sin || ''}"></div>
+            <div><label>Hire Date</label><input id="emp_hire_date" type="date" value="${emp.hire_date || ''}"></div>
+          </div>
+
+          <h4 style="font-size:13px;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;margin:24px 0 12px;">Address</h4>
+          <div style="margin-bottom:16px;">
+            <label>Street Address (Line 1)</label>
+            <input id="emp_address_line_1" value="${emp.address_line_1 || ''}" placeholder="123 Main Street">
+          </div>
+          <div style="margin-bottom:16px;">
+            <label>Address Line 2 (Apt, Suite, etc.)</label>
+            <input id="emp_address_line_2" value="${emp.address_line_2 || ''}" placeholder="Apt 4B">
+          </div>
+          <div class="form-row-3">
+            <div><label>City</label><input id="emp_city" value="${emp.city || ''}"></div>
+            <div><label>Province</label><input id="emp_province" value="${emp.province || 'QC'}"></div>
+            <div><label>Postal Code</label><input id="emp_postal_code" value="${emp.postal_code || ''}" placeholder="H1A 1A1"></div>
+          </div>
+
+          <h4 style="font-size:13px;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;margin:24px 0 12px;">Pay &amp; Tax</h4>
+          <div class="form-row">
+            <div><label>Hourly Rate ($)</label><input id="emp_rate_per_hour" type="number" step="0.01" value="${emp.rate_per_hour || 0}"></div>
+            <div><label>Vacation Rate (%)</label><input id="emp_vacation_rate_pct" type="number" step="1" value="${((emp.vacation_rate || 0) * 100).toFixed(0)}"></div>
+          </div>
+          <div class="form-row">
+            <div><label>Federal TD1 Claim</label><input id="emp_federal_td1_claim" type="number" step="1" value="${emp.federal_td1_claim || 16452}"></div>
+            <div><label>Provincial TD1 Claim</label><input id="emp_provincial_td1_claim" type="number" step="1" value="${emp.provincial_td1_claim || 18952}"></div>
+          </div>
+          <div class="form-row">
+            <div><label>Extra Federal Tax/pay ($)</label><input id="emp_additional_federal_tax" type="number" step="0.01" value="${emp.additional_federal_tax || 0}"></div>
+            <div><label>Extra Quebec Tax/pay ($)</label><input id="emp_additional_quebec_tax" type="number" step="0.01" value="${emp.additional_quebec_tax || 0}"></div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;cursor:pointer;">
+              <input type="checkbox" id="emp_active" ${emp.active ? 'checked' : ''} style="width:auto;"> Active
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;cursor:pointer;">
+              <input type="checkbox" id="emp_tax_exempt_ei" ${emp.tax_exempt_ei ? 'checked' : ''} style="width:auto;"> Exempt from EI
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          ${isEdit ? `<button class="danger" onclick="deleteEmployee('${emp.code}')" style="margin-right:auto;">🗑 Delete</button>` : ''}
+          <button class="secondary" onclick="closeModal()">Cancel</button>
+          <button class="success" onclick="saveEmployee(${isEdit})">💾 Save</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById('modal-container').innerHTML = '';
+}
+
+function saveEmployee(isEdit) {
+  const fields = ['code','employee_id','first_name','last_name','occupation','department',
+                  'sin','hire_date','address_line_1','address_line_2','city','province','postal_code'];
+  const numFields = ['rate_per_hour','federal_td1_claim','provincial_td1_claim',
+                     'additional_federal_tax','additional_quebec_tax'];
+  const data = {};
+  fields.forEach(f => data[f] = (document.getElementById('emp_' + f) || {}).value || '');
+  numFields.forEach(f => data[f] = parseFloat(document.getElementById('emp_' + f).value) || 0);
+  data.vacation_rate = (parseFloat(document.getElementById('emp_vacation_rate_pct').value) || 0) / 100;
+  data.active = document.getElementById('emp_active').checked;
+  data.tax_exempt_ei = document.getElementById('emp_tax_exempt_ei').checked;
+
+  if (!data.first_name || !data.last_name) { alert('First and last name are required'); return; }
+  if (!data.code) { alert('Employee code is required'); return; }
+
+  const list = getEmployees();
+  const idx = list.findIndex(e => e.code === data.code);
+  if (idx >= 0) {
+    list[idx] = {...list[idx], ...data};
+  } else {
+    if (list.some(e => e.code === data.code)) { alert('Employee code already exists'); return; }
+    list.push(data);
+  }
+  saveEmployees(list);
+  closeModal();
+  renderEmployees();
+}
+
+function deleteEmployee(code) {
+  if (!confirm('Delete this employee? Past pay history will remain but the employee will no longer appear.')) return;
+  saveEmployees(getEmployees().filter(e => e.code !== code));
+  closeModal();
+  renderEmployees();
 }
 
 // Initialize
