@@ -822,6 +822,16 @@ function renderNewPeriod() {
     </div>
 
     <div class="card">
+      <h2><span class="icon">📥</span> Import / Export Hours</h2>
+      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
+        Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.
+      </p>
+      <button class="secondary" onclick="downloadHoursTemplate()">📄 Download CSV Template</button>
+      <button class="secondary" onclick="document.getElementById('hoursCsvInput').click()" style="margin-left:8px;">📤 Import Hours from CSV</button>
+      <input type="file" id="hoursCsvInput" accept=".csv" style="display:none" onchange="importHoursCSV(event)">
+    </div>
+
+    <div class="card">
       <h2><span class="icon">⏱</span> Enter Hours Worked</h2>
       <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">Enter hours for each employee. Tab to move between fields.</p>
       <div style="overflow-x:auto;">
@@ -866,6 +876,245 @@ function updatePayDate() {
     d.setDate(d.getDate() + 6);
     document.getElementById('payDate').value = d.toISOString().split('T')[0];
   }
+}
+
+function downloadHoursTemplate() {
+  const active = getActiveEmployees();
+  const lines = ["Code,Name,Regular,Holiday,Vacation,Special$,Maternity"];
+  active.forEach(e => {
+    lines.push(`${e.code},"${e.first_name} ${e.last_name}",0,0,0,0,0`);
+  });
+  const csv = lines.join("\n");
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = document.getElementById('periodEnd').value || new Date().toISOString().split('T')[0];
+  a.href = url;
+  a.download = `hours_template_${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importHoursCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const text = e.target.result;
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      if (lines.length < 2) throw new Error('CSV looks empty');
+
+      // Parse header to find columns
+      const header = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[^a-z0-9$]/g, ''));
+      const cIdx = header.indexOf('code');
+      const rIdx = header.indexOf('regular');
+      const hIdx = header.indexOf('holiday');
+      const vIdx = header.indexOf('vacation');
+      const sIdx = header.findIndex(h => h.startsWith('special'));
+      const mIdx = header.indexOf('maternity');
+
+      if (cIdx < 0) throw new Error('CSV needs a "Code" column');
+
+      let imported = 0;
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCSVRow(lines[i]);
+        const code = (cols[cIdx] || '').trim();
+        if (!code) continue;
+        const elReg = document.getElementById(`reg_${code}`);
+        if (!elReg) continue;
+        if (rIdx >= 0) elReg.value = parseFloat(cols[rIdx]) || 0;
+        if (hIdx >= 0) document.getElementById(`hol_${code}`).value = parseFloat(cols[hIdx]) || 0;
+        if (vIdx >= 0) document.getElementById(`vac_${code}`).value = parseFloat(cols[vIdx]) || 0;
+        if (sIdx >= 0) document.getElementById(`spec_${code}`).value = parseFloat(cols[sIdx]) || 0;
+        if (mIdx >= 0) document.getElementById(`mat_${code}`).value = parseFloat(cols[mIdx]) || 0;
+        imported++;
+      }
+      alert(`✅ Imported hours for ${imported} employee(s).`);
+    } catch (err) {
+      alert('❌ Could not import CSV: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function parseCSVRow(line) {
+  const out = [];
+  let cur = '', inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"' && line[i+1] === '"') { cur += '"'; i++; }
+    else if (ch === '"') { inQuote = !inQuote; }
+    else if (ch === ',' && !inQuote) { out.push(cur); cur = ''; }
+    else { cur += ch; }
+  }
+  out.push(cur);
+  return out;
+}
+
+function exportPeriodCSV(periodEnd) {
+  const history = loadHistory();
+  const rec = history.find(p => p.period.pay_end_date === periodEnd);
+  if (!rec) return;
+  const employees = getEmployees();
+  const header = "Code,Name,Reg Hrs,Hol Hrs,Vac Hrs,Mat Hrs,Special $,Gross,Fed Tax,QC Tax,EI,QPIP,QPP,Medical,Pension,Total Deductions,Net Pay,Vacation Accrual";
+  const lines = [header];
+  rec.results.forEach(r => {
+    const emp = employees.find(e => e.code === r.employee_code);
+    const name = emp ? `${emp.first_name} ${emp.last_name}` : r.employee_code;
+    lines.push([
+      r.employee_code, `"${name}"`,
+      r.regular_hours, r.holiday_hours, r.vacation_hours, r.maternity_hours,
+      r.special_amount.toFixed(2), r.gross.toFixed(2),
+      r.federal_tax.toFixed(2), r.quebec_tax.toFixed(2),
+      r.ei_ee.toFixed(2), r.qpip_ee.toFixed(2), r.qpp_ee.toFixed(2),
+      (r.medical || 0).toFixed(2), (r.pension_ee || 0).toFixed(2),
+      r.total_deductions.toFixed(2), r.net_pay.toFixed(2),
+      r.vacation_accrual.toFixed(2)
+    ].join(','));
+  });
+  const blob = new Blob([lines.join("\n")], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `payroll_${periodEnd}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function printAllPayslips(periodEnd) {
+  const history = loadHistory();
+  const rec = history.find(p => p.period.pay_end_date === periodEnd);
+  if (!rec) return;
+  // Render each payslip one after the other in the view-payslip container
+  const container = document.getElementById('view-payslip');
+  let html = `
+    <div class="no-print" style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="secondary" onclick="viewPeriod('${periodEnd}')">← Back to Period</button>
+      <button class="primary" onclick="window.print()">🖨 Print All Now</button>
+      <p style="margin-left:12px;color:var(--gray-600);font-size:13px;">All employees with pay > $0 will print, one payslip per page.</p>
+    </div>
+  `;
+  rec.results.filter(r => r.gross > 0).forEach((r, idx) => {
+    html += `<div style="${idx > 0 ? 'page-break-before:always;margin-top:40px;' : ''}">` + buildPayslipHTML(rec, r) + `</div>`;
+  });
+  container.innerHTML = html;
+  showView('payslip');
+}
+
+function buildPayslipHTML(rec, r) {
+  const emp = getEmployee(r.employee_code);
+  if (!emp) return '';
+  const ytdGross = (r.ytd.gross || 0) + r.gross;
+  const ytdNet = (r.ytd.net_pay || 0) + r.net_pay;
+  const ytdFed = (r.ytd.federal_tax || 0) + r.federal_tax;
+  const ytdQc = (r.ytd.quebec_tax || 0) + r.quebec_tax;
+  const ytdEi = (r.ytd.ei_ee || 0) + r.ei_ee;
+  const ytdQpip = (r.ytd.qpip_ee || 0) + r.qpip_ee;
+  const ytdQpp = (r.ytd.qpp_ee || 0) + r.qpp_ee;
+  const ytdMedical = (r.ytd.medical || 0) + (r.medical || 0);
+  const ytdPension = (r.ytd.pension_ee || 0) + (r.pension_ee || 0);
+  const ytdVacAccr = (r.ytd.vacation_accrual || 0) + r.vacation_accrual;
+  const ytdVacPaid = (r.ytd.vacation_amount || 0) + r.vacation_amount;
+  const vacBalance = ytdVacAccr - ytdVacPaid;
+  const ytdRegHrs = (r.ytd.regular_hours || 0) + r.regular_hours;
+  const ytdRegAmt = (r.ytd.regular_amount || 0) + r.regular_amount;
+  const fullAddr = [emp.address_line_1, emp.address_line_2].filter(Boolean).join(', ');
+  const cityLine = [emp.city, emp.province, emp.postal_code].filter(Boolean).join(' ');
+
+  return `
+    <div class="payslip">
+      <div class="payslip-top">
+        <div>
+          <div class="payslip-company">${COMPANY.name}</div>
+          <div class="payslip-company-meta">${COMPANY.address || 'Quebec, Canada'}</div>
+        </div>
+        <div class="payslip-stub">Pay Stub</div>
+      </div>
+      <div class="payslip-section">
+        <h3>Statement of Earnings &amp; Deductions</h3>
+        <div class="info-grid">
+          <div class="info-block">
+            <div class="label">Employee</div><div class="value">${emp.first_name} ${emp.last_name}</div>
+            <div class="label">Employee ID</div><div class="value">${emp.employee_id || '—'}</div>
+            <div class="label">SIN</div><div class="value">${emp.sin || '—'}</div>
+            <div class="label">Occupation</div><div class="value">${emp.occupation}</div>
+          </div>
+          <div class="info-block" style="text-align:right;">
+            <div class="label">Pay Period End</div><div class="value">${rec.period.pay_end_date}</div>
+            <div class="label">Payment Date</div><div class="value">${rec.period.payment_date}</div>
+            <div class="label">Pay Number</div><div class="value">${rec.period.pay_number} of ${COMPANY.pay_periods_per_year}</div>
+            <div class="label">Hourly Rate</div><div class="value">$${fmt(emp.rate_per_hour)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="payslip-section">
+        <h3>Earnings</h3>
+        <table>
+          <thead><tr><th>Description</th><th style="text-align:right;">Hours</th><th style="text-align:right;">Amount</th><th style="text-align:right;">YTD Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Regular Pay</td><td class="num">${fmt(r.regular_hours)}</td><td class="num">$${fmt(r.regular_amount)}</td><td class="num">$${fmt(ytdRegAmt)}</td></tr>
+            <tr><td>Holiday Pay</td><td class="num">${fmt(r.holiday_hours)}</td><td class="num">$${fmt(r.holiday_amount)}</td><td class="num">$${fmt((r.ytd.holiday_amount || 0) + r.holiday_amount)}</td></tr>
+            <tr><td>Vacation Pay</td><td class="num">${fmt(r.vacation_hours)}</td><td class="num">$${fmt(r.vacation_amount)}</td><td class="num">$${fmt((r.ytd.vacation_amount || 0) + r.vacation_amount)}</td></tr>
+            <tr><td>Special Pay</td><td class="num">—</td><td class="num">$${fmt(r.special_amount)}</td><td class="num">$${fmt((r.ytd.special_amount || 0) + r.special_amount)}</td></tr>
+            <tr><td>Maternity Pay</td><td class="num">${fmt(r.maternity_hours)}</td><td class="num">$${fmt(r.maternity_amount)}</td><td class="num">$${fmt((r.ytd.maternity_amount || 0) + r.maternity_amount)}</td></tr>
+          </tbody>
+          <tfoot><tr><td><strong>GROSS PAY</strong></td><td></td><td class="num"><strong>$${fmt(r.gross)}</strong></td><td class="num"><strong>$${fmt(ytdGross)}</strong></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="payslip-section">
+        <h3>Deductions</h3>
+        <table>
+          <thead><tr><th>Description</th><th style="text-align:right;">Current</th><th style="text-align:right;">YTD</th></tr></thead>
+          <tbody>
+            <tr><td>QPP</td><td class="num">$${fmt(r.qpp_ee)}</td><td class="num">$${fmt(ytdQpp)}</td></tr>
+            <tr><td>EI</td><td class="num">$${fmt(r.ei_ee)}</td><td class="num">$${fmt(ytdEi)}</td></tr>
+            <tr><td>QPIP</td><td class="num">$${fmt(r.qpip_ee)}</td><td class="num">$${fmt(ytdQpip)}</td></tr>
+            <tr><td>Federal Tax</td><td class="num">$${fmt(r.federal_tax)}</td><td class="num">$${fmt(ytdFed)}</td></tr>
+            <tr><td>Quebec Tax</td><td class="num">$${fmt(r.quebec_tax)}</td><td class="num">$${fmt(ytdQc)}</td></tr>
+            ${(r.medical || ytdMedical) ? `<tr><td>Medical / Insurance</td><td class="num">$${fmt(r.medical || 0)}</td><td class="num">$${fmt(ytdMedical)}</td></tr>` : ''}
+            ${(r.pension_ee || ytdPension) ? `<tr><td>Pension / RRSP</td><td class="num">$${fmt(r.pension_ee || 0)}</td><td class="num">$${fmt(ytdPension)}</td></tr>` : ''}
+          </tbody>
+          <tfoot><tr><td><strong>TOTAL DEDUCTIONS</strong></td><td class="num"><strong>$${fmt(r.total_deductions)}</strong></td><td class="num"><strong>$${fmt(ytdFed + ytdQc + ytdEi + ytdQpip + ytdQpp + ytdMedical + ytdPension)}</strong></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="net-pay-box">
+        <div>
+          <div class="label">Net Pay This Period</div>
+          <div style="font-size:11px;opacity:0.9;margin-top:4px;">YTD Net: $${fmt(ytdNet)}</div>
+        </div>
+        <div class="amount">$${fmt(r.net_pay)}</div>
+      </div>
+      <div class="payslip-section">
+        <h3>Vacation Accrual @ ${(emp.vacation_rate * 100).toFixed(0)}%</h3>
+        <table>
+          <thead><tr><th>Current Accrual</th><th style="text-align:right;">YTD Accrued</th><th style="text-align:right;">YTD Paid Out</th><th style="text-align:right;">Available Balance</th></tr></thead>
+          <tbody><tr>
+            <td class="num">$${fmt(r.vacation_accrual)}</td>
+            <td class="num">$${fmt(ytdVacAccr)}</td>
+            <td class="num">$${fmt(ytdVacPaid)}</td>
+            <td class="num" style="color:var(--success);font-weight:700;">$${fmt(vacBalance)}</td>
+          </tr></tbody>
+        </table>
+      </div>
+      <div class="nn-watermark">— NON NEGOTIABLE —</div>
+      <div class="signature-block">
+        <div class="info-block">
+          <div class="label">Employee Address</div>
+          <div class="value" style="margin-bottom:4px;">${emp.first_name} ${emp.last_name}</div>
+          <div style="font-size:13px;color:var(--gray-600);line-height:1.6;">
+            ${fullAddr || '<em style="color:var(--gray-400);">No address on file</em>'}<br>${cityLine}
+          </div>
+        </div>
+        <div class="info-block" style="text-align:right;">
+          <div class="label">Employer</div>
+          <div class="value" style="margin-bottom:4px;">${COMPANY.name}</div>
+          <div style="font-size:13px;color:var(--gray-600);">Department: ${emp.department || '—'}</div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function submitPayPeriod() {
@@ -931,6 +1180,10 @@ function updatePayslipsContent(periodEnd) {
   document.getElementById('payslipsContent').innerHTML = `
     <div class="card">
       <h2><span class="icon">👥</span> Payslips for ${rec.period.pay_end_date}</h2>
+      <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="primary" onclick="printAllPayslips('${periodEnd}')">🖨 Print All Payslips</button>
+        <button class="secondary" onclick="exportPeriodCSV('${periodEnd}')">📥 Export CSV</button>
+      </div>
       <table>
         <thead>
           <tr><th>Employee</th><th>Gross</th><th>Total Tax</th><th>Net Pay</th><th></th></tr>
@@ -971,9 +1224,13 @@ function viewPeriod(periodEnd) {
       <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
         Payment date: <strong>${rec.period.payment_date}</strong> · Pay #${rec.period.pay_number} of ${COMPANY.pay_periods_per_year}
       </p>
-      <button class="secondary" onclick="showView('dashboard')">← Dashboard</button>
-      <button class="success" onclick="showView('payslips')" style="margin-left:8px;">📄 View Payslips</button>
-      <button class="primary" onclick="window.print()" style="margin-left:8px;">🖨 Print Summary</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="secondary" onclick="showView('dashboard')">← Dashboard</button>
+        <button class="success" onclick="showView('payslips')">📄 View Payslips</button>
+        <button class="primary" onclick="printAllPayslips('${rec.period.pay_end_date}')">🖨 Print All Payslips</button>
+        <button class="secondary" onclick="exportPeriodCSV('${rec.period.pay_end_date}')">📥 Export CSV</button>
+        <button class="secondary" onclick="window.print()">🖨 Print Summary</button>
+      </div>
     </div>
 
     <div class="stat-grid">
