@@ -432,19 +432,26 @@
   <div class="header-inner">
     <div>
       <h1 id="companyName">Garderie La Belle Academie Inc.</h1>
-      <div class="subtitle">Quebec Biweekly Payroll System</div>
+      <div class="subtitle" id="headerSubtitle">Quebec Biweekly Payroll System</div>
     </div>
-    <div class="badge">Year 2026 · 26 pays/year</div>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <div class="badge">Year 2026 · 26 pays/year</div>
+      <select id="languageSelector" onchange="changeLanguage(this.value)" style="background:white;color:var(--gray-800);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.3);cursor:pointer;font-size:13px;font-weight:600;">
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
   </div>
 </header>
 
 <main>
   <nav class="tabs">
-    <button id="navDashboard" class="active" onclick="showView('dashboard')">📊 Dashboard</button>
-    <button id="navNewPeriod" onclick="showView('newPeriod')">📝 New Period</button>
-    <button id="navPayslips" onclick="showView('payslips')">📄 Payslips</button>
-    <button id="navHistory" onclick="showView('history')">🗂 History</button>
-    <button id="navEmployees" onclick="showView('employees')">👥 Employees</button>
+    <button id="navDashboard" class="active" onclick="showView('dashboard')" data-label="Dashboard">📊 <span class="nav-label">Dashboard</span></button>
+    <button id="navNewPeriod" onclick="showView('newPeriod')" data-label="New Period">📝 <span class="nav-label">New Period</span></button>
+    <button id="navPayslips" onclick="showView('payslips')" data-label="Payslips">📄 <span class="nav-label">Payslips</span></button>
+    <button id="navHistory" onclick="showView('history')" data-label="History">🗂 <span class="nav-label">History</span></button>
+    <button id="navEmployees" onclick="showView('employees')" data-label="Employees">👥 <span class="nav-label">Employees</span></button>
   </nav>
 
   <div id="view-dashboard"></div>
@@ -499,6 +506,223 @@ const TAX_CONFIG = {
   fss:  { rate: 0.0165 },
   csst: { rate: 0.0177, annual_max_insurable: 88000 }
 };
+
+// ============================================================================
+//  INTERNATIONALIZATION (i18n)
+// ============================================================================
+
+const LANGUAGES = {
+  en: 'English',
+  fr: 'Français',
+  es: 'Español'
+};
+
+const TRANSLATIONS = {
+  en: {
+    'Dashboard': 'Dashboard',
+    'New Period': 'New Period',
+    'Payslips': 'Payslips',
+    'History': 'History',
+    'Employees': 'Employees',
+    'Quebec Biweekly Payroll System': 'Quebec Biweekly Payroll System',
+    'Year': 'Year',
+    'pays/year': 'pays/year',
+    'Company Name': 'Company Name',
+    'Pay Period End Date': 'Pay Period End Date',
+    'Payment Date': 'Payment Date',
+    'Import / Export Hours': 'Import / Export Hours',
+    'Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.': 'Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.',
+    'Download CSV Template': 'Download CSV Template',
+    'Import Hours from CSV': 'Import Hours from CSV',
+    'Enter Hours Worked': 'Enter Hours Worked',
+    'Enter hours for each employee. Tab to move between fields.': 'Enter hours for each employee. Tab to move between fields.',
+    'Employee': 'Employee',
+    'Rate': 'Rate',
+    'Regular': 'Regular',
+    'Holiday': 'Holiday',
+    'Vacation': 'Vacation',
+    'Special $': 'Special $',
+    'Maternity': 'Maternity',
+    'Calculate Payroll & Generate Payslips': 'Calculate Payroll & Generate Payslips',
+    'Cancel': 'Cancel',
+    'New Pay Period': 'New Pay Period',
+    'Manage Employees': 'Manage Employees',
+    'Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.': 'Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.',
+    'Add New Employee': 'Add New Employee',
+    'Reset to Defaults': 'Reset to Defaults',
+    'Employee List': 'Employee List',
+    'Code': 'Code',
+    'Name': 'Name',
+    'Occupation': 'Occupation',
+    'Rate/hr': 'Rate/hr',
+    'Vac %': 'Vac %',
+    'Address': 'Address',
+    'Status': 'Status',
+    'Active': 'Active',
+    'Inactive': 'Inactive',
+    'Edit': 'Edit',
+    'Imported hours for': 'Imported hours for',
+    'employee(s).': 'employee(s).',
+    'Could not import CSV:': 'Could not import CSV:',
+    'Welcome!': 'Welcome!',
+    'Active Employees': 'Active Employees',
+    'Pay Periods Run': 'Pay Periods Run',
+    'YTD Gross Payroll': 'YTD Gross Payroll',
+    'YTD Net Paid': 'YTD Net Paid',
+    'Quick Actions': 'Quick Actions',
+    'Enter New Pay Period': 'Enter New Pay Period',
+    'View Payslips': 'View Payslips',
+    'Manage Employees': 'Manage Employees',
+    'Recent Pay Periods': 'Recent Pay Periods',
+    'Period End': 'Period End',
+    'Pay #': 'Pay #',
+    'Pay Date': 'Pay Date',
+    'Total Gross': 'Total Gross',
+    'Total Net': 'Total Net',
+    'View': 'View'
+  },
+  fr: {
+    'Dashboard': 'Tableau de bord',
+    'New Period': 'Nouvelle période',
+    'Payslips': 'Bulletins de paie',
+    'History': 'Historique',
+    'Employees': 'Employés',
+    'Quebec Biweekly Payroll System': 'Système de paie bihebdomadaire du Québec',
+    'Year': 'Année',
+    'pays/year': 'paies/an',
+    'Company Name': 'Nom de l\'entreprise',
+    'Pay Period End Date': 'Date de fin de période de paie',
+    'Payment Date': 'Date de paiement',
+    'Import / Export Hours': 'Importer / Exporter les heures',
+    'Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.': 'Téléchargez un modèle CSV, remplissez les heures dans Excel, puis rechargez-le. Ou entrez les heures directement ci-dessous.',
+    'Download CSV Template': 'Télécharger le modèle CSV',
+    'Import Hours from CSV': 'Importer les heures à partir d\'un CSV',
+    'Enter Hours Worked': 'Entrer les heures travaillées',
+    'Enter hours for each employee. Tab to move between fields.': 'Entrez les heures pour chaque employé. Appuyez sur Tab pour passer au champ suivant.',
+    'Employee': 'Employé',
+    'Rate': 'Taux',
+    'Regular': 'Normal',
+    'Holiday': 'Congé',
+    'Vacation': 'Vacances',
+    'Special $': 'Spécial $',
+    'Maternity': 'Maternité',
+    'Calculate Payroll & Generate Payslips': 'Calculer la paie et générer les bulletins',
+    'Cancel': 'Annuler',
+    'New Pay Period': 'Nouvelle période de paie',
+    'Manage Employees': 'Gérer les employés',
+    'Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.': 'Cliquez sur un employé pour modifier ses détails (nom, adresse, taux de paie, etc.). Les modifications sont enregistrées automatiquement.',
+    'Add New Employee': 'Ajouter un nouvel employé',
+    'Reset to Defaults': 'Réinitialiser par défaut',
+    'Employee List': 'Liste des employés',
+    'Code': 'Code',
+    'Name': 'Nom',
+    'Occupation': 'Profession',
+    'Rate/hr': 'Taux/h',
+    'Vac %': 'Vac %',
+    'Address': 'Adresse',
+    'Status': 'État',
+    'Active': 'Actif',
+    'Inactive': 'Inactif',
+    'Edit': 'Modifier',
+    'Imported hours for': 'Heures importées pour',
+    'employee(s).': 'employé(s).',
+    'Could not import CSV:': 'Impossible d\'importer le CSV:',
+    'Welcome!': 'Bienvenue!',
+    'Active Employees': 'Employés actifs',
+    'Pay Periods Run': 'Périodes de paie exécutées',
+    'YTD Gross Payroll': 'Paie brute d\'année',
+    'YTD Net Paid': 'Montant net versé d\'année',
+    'Quick Actions': 'Actions rapides',
+    'Enter New Pay Period': 'Entrer une nouvelle période de paie',
+    'View Payslips': 'Afficher les bulletins de paie',
+    'Manage Employees': 'Gérer les employés',
+    'Recent Pay Periods': 'Récents périodes de paie',
+    'Period End': 'Fin de période',
+    'Pay #': 'Paie #',
+    'Pay Date': 'Date de paiement',
+    'Total Gross': 'Total brut',
+    'Total Net': 'Total net',
+    'View': 'Afficher'
+  },
+  es: {
+    'Dashboard': 'Panel de control',
+    'New Period': 'Nuevo período',
+    'Payslips': 'Talones de pago',
+    'History': 'Historial',
+    'Employees': 'Empleados',
+    'Quebec Biweekly Payroll System': 'Sistema de nómina quincenal de Quebec',
+    'Year': 'Año',
+    'pays/year': 'pagos/año',
+    'Company Name': 'Nombre de la empresa',
+    'Pay Period End Date': 'Fecha de cierre del período de pago',
+    'Payment Date': 'Fecha de pago',
+    'Import / Export Hours': 'Importar / Exportar horas',
+    'Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.': 'Descargue una plantilla CSV, complete las horas en Excel y luego cárguelas nuevamente. O simplemente ingrese las horas directamente a continuación.',
+    'Download CSV Template': 'Descargar plantilla CSV',
+    'Import Hours from CSV': 'Importar horas desde CSV',
+    'Enter Hours Worked': 'Ingrese las horas trabajadas',
+    'Enter hours for each employee. Tab to move between fields.': 'Ingrese las horas para cada empleado. Presione Tab para pasar al siguiente campo.',
+    'Employee': 'Empleado',
+    'Rate': 'Tarifa',
+    'Regular': 'Normal',
+    'Holiday': 'Festivo',
+    'Vacation': 'Vacaciones',
+    'Special $': 'Especial $',
+    'Maternity': 'Maternidad',
+    'Calculate Payroll & Generate Payslips': 'Calcular nómina y generar talones de pago',
+    'Cancel': 'Cancelar',
+    'New Pay Period': 'Nuevo período de pago',
+    'Manage Employees': 'Administrar empleados',
+    'Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.': 'Haga clic en un empleado para editar sus detalles (nombre, dirección, tarifa de pago, etc.). Los cambios se guardan automáticamente.',
+    'Add New Employee': 'Agregar nuevo empleado',
+    'Reset to Defaults': 'Restablecer valores predeterminados',
+    'Employee List': 'Lista de empleados',
+    'Code': 'Código',
+    'Name': 'Nombre',
+    'Occupation': 'Ocupación',
+    'Rate/hr': 'Tarifa/h',
+    'Vac %': 'Vac %',
+    'Address': 'Dirección',
+    'Status': 'Estado',
+    'Active': 'Activo',
+    'Inactive': 'Inactivo',
+    'Edit': 'Editar',
+    'Imported hours for': 'Horas importadas para',
+    'employee(s).': 'empleado(s).',
+    'Could not import CSV:': 'No se pudo importar CSV:',
+    'Welcome!': '¡Bienvenido!',
+    'Active Employees': 'Empleados activos',
+    'Pay Periods Run': 'Períodos de pago ejecutados',
+    'YTD Gross Payroll': 'Nómina bruta del año',
+    'YTD Net Paid': 'Monto neto pagado del año',
+    'Quick Actions': 'Acciones rápidas',
+    'Enter New Pay Period': 'Ingresar nuevo período de pago',
+    'View Payslips': 'Ver talones de pago',
+    'Manage Employees': 'Administrar empleados',
+    'Recent Pay Periods': 'Períodos de pago recientes',
+    'Period End': 'Fin de período',
+    'Pay #': 'Pago #',
+    'Pay Date': 'Fecha de pago',
+    'Total Gross': 'Total bruto',
+    'Total Net': 'Total neto',
+    'View': 'Ver'
+  }
+};
+
+let currentLanguage = localStorage.getItem('payroll_language') || 'en';
+
+function t(key) {
+  return (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage][key]) ||
+         (TRANSLATIONS['en'] && TRANSLATIONS['en'][key]) || key;
+}
+
+function changeLanguage(lang) {
+  if (LANGUAGES[lang]) {
+    currentLanguage = lang;
+    localStorage.setItem('payroll_language', lang);
+    location.reload();
+  }
+}
 
 // Default employees (seeded; user can override via Employees tab)
 const DEFAULT_EMPLOYEES = [
@@ -747,38 +971,38 @@ function renderDashboard() {
 
     <div class="stat-grid">
       <div class="stat">
-        <div class="label">Active Employees</div>
+        <div class="label">${t('Active Employees')}</div>
         <div class="value primary">${active}</div>
       </div>
       <div class="stat success">
-        <div class="label">Pay Periods Run</div>
+        <div class="label">${t('Pay Periods Run')}</div>
         <div class="value">${history.length}</div>
       </div>
       <div class="stat">
-        <div class="label">YTD Gross Payroll</div>
+        <div class="label">${t('YTD Gross Payroll')}</div>
         <div class="value">$${fmt(ytdGross)}</div>
       </div>
       <div class="stat success">
-        <div class="label">YTD Net Paid</div>
+        <div class="label">${t('YTD Net Paid')}</div>
         <div class="value success">$${fmt(ytdNet)}</div>
       </div>
     </div>
 
     <div class="card">
-      <h2><span class="icon">🚀</span> Quick Actions</h2>
+      <h2><span class="icon">🚀</span> ${t('Quick Actions')}</h2>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button class="primary" onclick="showView('newPeriod')">📝 Enter New Pay Period</button>
-        <button class="success" onclick="showView('payslips')">📄 View Payslips</button>
-        <button class="secondary" onclick="showView('employees')">👥 Manage Employees</button>
-        <button class="secondary" onclick="showView('history')">🗂 History</button>
+        <button class="primary" onclick="showView('newPeriod')">📝 ${t('Enter New Pay Period')}</button>
+        <button class="success" onclick="showView('payslips')">📄 ${t('View Payslips')}</button>
+        <button class="secondary" onclick="showView('employees')">👥 ${t('Manage Employees')}</button>
+        <button class="secondary" onclick="showView('history')">🗂 ${t('History')}</button>
       </div>
     </div>
 
     ${history.length > 0 ? `
       <div class="card">
-        <h2><span class="icon">🕐</span> Recent Pay Periods</h2>
+        <h2><span class="icon">🕐</span> ${t('Recent Pay Periods')}</h2>
         <table>
-          <thead><tr><th>Period End</th><th>Pay #</th><th>Pay Date</th><th>Total Gross</th><th>Total Net</th><th></th></tr></thead>
+          <thead><tr><th>${t('Period End')}</th><th>${t('Pay #')}</th><th>${t('Pay Date')}</th><th>${t('Total Gross')}</th><th>${t('Total Net')}</th><th></th></tr></thead>
           <tbody>
             ${history.slice(-5).reverse().map(p => {
               const tg = p.results.reduce((s, r) => s + r.gross, 0);
@@ -790,7 +1014,7 @@ function renderDashboard() {
                   <td>${p.period.payment_date}</td>
                   <td class="num">$${fmt(tg)}</td>
                   <td class="num" style="color:var(--success);">$${fmt(tn)}</td>
-                  <td><button class="primary small" onclick="viewPeriod('${p.period.pay_end_date}')">View →</button></td>
+                  <td><button class="primary small" onclick="viewPeriod('${p.period.pay_end_date}')">${t('View')} →</button></td>
                 </tr>`;
             }).join('')}
           </tbody>
@@ -805,42 +1029,50 @@ function renderNewPeriod() {
   const defaultEnd = today.toISOString().split('T')[0];
   const payDate = new Date(today.getTime() + 6 * 86400000).toISOString().split('T')[0];
   const active = getActiveEmployees();
+  const companyName = localStorage.getItem('payroll_company_name') || COMPANY.name;
 
   document.getElementById('view-newPeriod').innerHTML = `
     <div class="card">
-      <h2><span class="icon">📝</span> New Pay Period</h2>
+      <h2><span class="icon">📝</span> <span class="label">${t('New Pay Period')}</span></h2>
       <div class="form-row">
         <div>
-          <label>Pay Period End Date</label>
+          <label>${t('Company Name')}</label>
+          <input type="text" id="companyNameInput" value="${companyName}" placeholder="Enter company name" onchange="saveCompanyName()">
+        </div>
+        <div style="display:none;"></div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>${t('Pay Period End Date')}</label>
           <input type="date" id="periodEnd" value="${defaultEnd}" onchange="updatePayDate()">
         </div>
         <div>
-          <label>Payment Date</label>
+          <label>${t('Payment Date')}</label>
           <input type="date" id="payDate" value="${payDate}">
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2><span class="icon">📥</span> Import / Export Hours</h2>
+      <h2><span class="icon">📥</span> ${t('Import / Export Hours')}</h2>
       <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
-        Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.
+        ${t('Download a CSV template, fill in hours in Excel, then upload it back. Or just enter hours below directly.')}
       </p>
-      <button class="secondary" onclick="downloadHoursTemplate()">📄 Download CSV Template</button>
-      <button class="secondary" onclick="document.getElementById('hoursCsvInput').click()" style="margin-left:8px;">📤 Import Hours from CSV</button>
+      <button class="secondary" onclick="downloadHoursTemplate()">📄 ${t('Download CSV Template')}</button>
+      <button class="secondary" onclick="document.getElementById('hoursCsvInput').click()" style="margin-left:8px;">📤 ${t('Import Hours from CSV')}</button>
       <input type="file" id="hoursCsvInput" accept=".csv" style="display:none" onchange="importHoursCSV(event)">
     </div>
 
     <div class="card">
-      <h2><span class="icon">⏱</span> Enter Hours Worked</h2>
-      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">Enter hours for each employee. Tab to move between fields.</p>
+      <h2><span class="icon">⏱</span> ${t('Enter Hours Worked')}</h2>
+      <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">${t('Enter hours for each employee. Tab to move between fields.')}</p>
       <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th>Employee</th><th>Rate</th>
-            <th>Regular</th><th>Holiday</th><th>Vacation</th>
-            <th>Special $</th><th>Maternity</th>
+            <th>${t('Employee')}</th><th>${t('Rate')}</th>
+            <th>${t('Regular')}</th><th>${t('Holiday')}</th><th>${t('Vacation')}</th>
+            <th>${t('Special $')}</th><th>${t('Maternity')}</th>
           </tr>
         </thead>
         <tbody>
@@ -862,8 +1094,8 @@ function renderNewPeriod() {
       </table>
       </div>
       <div style="margin-top:24px;display:flex;gap:12px;">
-        <button class="success" onclick="submitPayPeriod()">▶ Calculate Payroll &amp; Generate Payslips</button>
-        <button class="secondary" onclick="showView('dashboard')">Cancel</button>
+        <button class="success" onclick="submitPayPeriod()">▶ ${t('Calculate Payroll & Generate Payslips')}</button>
+        <button class="secondary" onclick="showView('dashboard')">${t('Cancel')}</button>
       </div>
     </div>
   `;
@@ -878,17 +1110,33 @@ function updatePayDate() {
   }
 }
 
+function saveCompanyName() {
+  const companyName = document.getElementById('companyNameInput')?.value || COMPANY.name;
+  localStorage.setItem('payroll_company_name', companyName);
+  const companyEl = document.getElementById('companyName');
+  if (companyEl) companyEl.textContent = companyName;
+}
+
 function downloadHoursTemplate() {
   const active = getActiveEmployees();
-  const lines = ["Code,Name,Regular,Holiday,Vacation,Special$,Maternity"];
+  const companyName = document.getElementById('companyNameInput')?.value || localStorage.getItem('payroll_company_name') || COMPANY.name;
+  const periodEnd = document.getElementById('periodEnd')?.value || new Date().toISOString().split('T')[0];
+
+  const lines = [
+    `"Company","${companyName}"`,
+    `"Period End Date","${periodEnd}"`,
+    "",
+    "Code,Name,Regular,Holiday,Vacation,Special$,Maternity"
+  ];
   active.forEach(e => {
     lines.push(`${e.code},"${e.first_name} ${e.last_name}",0,0,0,0,0`);
   });
+
   const csv = lines.join("\n");
   const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  const date = document.getElementById('periodEnd').value || new Date().toISOString().split('T')[0];
+  const date = periodEnd;
   a.href = url;
   a.download = `hours_template_${date}.csv`;
   a.click();
@@ -905,8 +1153,43 @@ function importHoursCSV(event) {
       const lines = text.split(/\r?\n/).filter(l => l.trim());
       if (lines.length < 2) throw new Error('CSV looks empty');
 
-      // Parse header to find columns
-      const header = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[^a-z0-9$]/g, ''));
+      let dataStartIdx = 0;
+      let importedCompanyName = null;
+      let importedPeriodDate = null;
+
+      // Check if first line contains metadata (Company/Period End Date)
+      if (lines[0].toLowerCase().includes('company') || lines[0].toLowerCase().includes('period')) {
+        const firstRowCols = parseCSVRow(lines[0]);
+        if (firstRowCols[0]?.toLowerCase().includes('company')) {
+          importedCompanyName = (parseCSVRow(lines[0])[1] || '').trim().replace(/^"|"$/g, '');
+          if (importedCompanyName) {
+            document.getElementById('companyNameInput').value = importedCompanyName;
+            saveCompanyName();
+          }
+        }
+        if (lines.length > 1 && parseCSVRow(lines[1])[0]?.toLowerCase().includes('period')) {
+          importedPeriodDate = (parseCSVRow(lines[1])[1] || '').trim().replace(/^"|"$/g, '');
+          if (importedPeriodDate) {
+            document.getElementById('periodEnd').value = importedPeriodDate;
+            updatePayDate();
+          }
+          dataStartIdx = 3; // Skip Company, Period, and blank line
+        } else if (lines.length > 1) {
+          dataStartIdx = 2;
+        }
+      }
+
+      // Find the header row (contains "Code")
+      let headerIdx = dataStartIdx;
+      for (let i = dataStartIdx; i < lines.length; i++) {
+        const testHeader = parseCSVRow(lines[i]);
+        if (testHeader.some(h => h?.toLowerCase().includes('code'))) {
+          headerIdx = i;
+          break;
+        }
+      }
+
+      const header = parseCSVRow(lines[headerIdx]).map(h => h.trim().toLowerCase().replace(/[^a-z0-9$]/g, ''));
       const cIdx = header.indexOf('code');
       const rIdx = header.indexOf('regular');
       const hIdx = header.indexOf('holiday');
@@ -917,7 +1200,7 @@ function importHoursCSV(event) {
       if (cIdx < 0) throw new Error('CSV needs a "Code" column');
 
       let imported = 0;
-      for (let i = 1; i < lines.length; i++) {
+      for (let i = headerIdx + 1; i < lines.length; i++) {
         const cols = parseCSVRow(lines[i]);
         const code = (cols[cIdx] || '').trim();
         if (!code) continue;
@@ -930,9 +1213,9 @@ function importHoursCSV(event) {
         if (mIdx >= 0) document.getElementById(`mat_${code}`).value = parseFloat(cols[mIdx]) || 0;
         imported++;
       }
-      alert(`✅ Imported hours for ${imported} employee(s).`);
+      alert(`✅ ${t('Imported hours for')} ${imported} ${t('employee(s).')}`);
     } catch (err) {
-      alert('❌ Could not import CSV: ' + err.message);
+      alert('❌ ' + t('Could not import CSV:') + ' ' + err.message);
     }
   };
   reader.readAsText(file);
@@ -1597,21 +1880,21 @@ function renderEmployees() {
   const list = getEmployees();
   document.getElementById('view-employees').innerHTML = `
     <div class="card">
-      <h2><span class="icon">👥</span> Manage Employees</h2>
+      <h2><span class="icon">👥</span> ${t('Manage Employees')}</h2>
       <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px;">
-        Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.
+        ${t('Click an employee to edit their details (name, address, pay rate, etc.). Changes save automatically.')}
       </p>
-      <button class="primary" onclick="openEmployeeModal()">+ Add New Employee</button>
-      <button class="secondary" onclick="resetEmployees()" style="margin-left:8px;">↺ Reset to Defaults</button>
+      <button class="primary" onclick="openEmployeeModal()">+ ${t('Add New Employee')}</button>
+      <button class="secondary" onclick="resetEmployees()" style="margin-left:8px;">↺ ${t('Reset to Defaults')}</button>
     </div>
 
     <div class="card">
-      <h2><span class="icon">📋</span> Employee List</h2>
+      <h2><span class="icon">📋</span> ${t('Employee List')}</h2>
       <table>
         <thead>
           <tr>
-            <th>Code</th><th>Name</th><th>Occupation</th><th>Rate/hr</th>
-            <th>Vac %</th><th>Address</th><th>Status</th><th></th>
+            <th>${t('Code')}</th><th>${t('Name')}</th><th>${t('Occupation')}</th><th>${t('Rate/hr')}</th>
+            <th>${t('Vac %')}</th><th>${t('Address')}</th><th>${t('Status')}</th><th></th>
           </tr>
         </thead>
         <tbody>
@@ -1626,9 +1909,9 @@ function renderEmployees() {
                 ${e.address_line_1 || '<em style="color:var(--gray-400);">No address</em>'}<br>
                 ${[e.city, e.province, e.postal_code].filter(Boolean).join(' ')}
               </td>
-              <td>${e.active ? '<span class="pill success">Active</span>' : '<span class="pill">Inactive</span>'}</td>
+              <td>${e.active ? `<span class="pill success">${t('Active')}</span>` : `<span class="pill">${t('Inactive')}</span>`}</td>
               <td>
-                <button class="primary small" onclick="openEmployeeModal('${e.code}')">✏️ Edit</button>
+                <button class="primary small" onclick="openEmployeeModal('${e.code}')">✏️ ${t('Edit')}</button>
               </td>
             </tr>
           `).join('')}
@@ -1780,6 +2063,15 @@ function deleteEmployee(code) {
 }
 
 // Initialize
+const savedCompanyName = localStorage.getItem('payroll_company_name');
+if (savedCompanyName) {
+  document.getElementById('companyName').textContent = savedCompanyName;
+}
+const languageSelector = document.getElementById('languageSelector');
+if (languageSelector) {
+  languageSelector.value = currentLanguage;
+}
+document.getElementById('headerSubtitle').textContent = t('Quebec Biweekly Payroll System');
 showView('dashboard');
 </script>
 
