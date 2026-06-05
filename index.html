@@ -2072,6 +2072,14 @@ if (languageSelector) {
   languageSelector.value = currentLanguage;
 }
 document.getElementById('headerSubtitle').textContent = t('Quebec Biweekly Payroll System');
+
+// Translate navigation buttons
+document.getElementById('navDashboard').querySelector('.nav-label').textContent = t('Dashboard');
+document.getElementById('navNewPeriod').querySelector('.nav-label').textContent = t('New Period');
+document.getElementById('navPayslips').querySelector('.nav-label').textContent = t('Payslips');
+document.getElementById('navHistory').querySelector('.nav-label').textContent = t('History');
+document.getElementById('navEmployees').querySelector('.nav-label').textContent = t('Employees');
+
 showView('dashboard');
 </script>
 
