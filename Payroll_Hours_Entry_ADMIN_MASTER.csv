@@ -1,0 +1,21 @@
+ADMIN MASTER SHEET - CONFIDENTIAL (RATES VISIBLE ONLY TO ADMIN)
+Garderie La Belle Academie Inc.
+
+PAY PERIOD,,,,,,,,,,,
+Period End Date:,2026-06-19,,,Payment Date:,2026-06-25,,,,
+Pay Frequency:,Biweekly,,,Year:,2026,,,,
+
+EMPLOYEE HOURS ENTRY - ADMIN VIEW (ALL DATA),,,,,,,,,,,
+Code,Employee Name,Department,Occupation,Hourly Rate,Regular Hours,Holiday Hours,Vacation Hours,Paternity Hours,Maternity Hours,Special $,Notes
+A1,Hooma Mohammad,04GHBB DPT,Carer,25.00,0,0,0,0,0,0,
+A6,Nadin Al Katan,04GHBB DPT,Carer,18.00,0,0,0,0,0,0,
+A8,Lana Aldamman,04GHBB DPT,Carer,25.00,0,0,0,0,0,0,
+A9,Majda Ghabro,04GHBB DPT,Carer,25.00,0,0,0,0,0,0,
+A15,Gracia Israeel,04GHBB DPT,Carer,19.75,0,0,0,0,0,0,
+A18,Rouba Nader,04GHBB DPT,Carer,18.00,0,0,0,0,0,0,
+A19,Lysa Bessam,04GHBB DPT,Carer,16.50,0,0,0,0,0,0,
+A21,Torpekay Hassanzada,04GHBB DPT,Carer,17.00,0,0,0,0,0,0,
+A22,Silva Danho,04GHBB DPT,Carer,17.00,0,0,0,0,0,0,
+A23,Lara Chakal,04GHBB DPT,Carer,18.00,0,0,0,0,0,0,
+
+TOTALS:,,,,,=SUM(F13:F22),=SUM(G13:G22),=SUM(H13:H22),=SUM(I13:I22),=SUM(J13:J22),=SUM(K13:K22),
