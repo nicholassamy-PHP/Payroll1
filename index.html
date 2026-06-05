@@ -591,6 +591,7 @@ const TRANSLATIONS = {
     'Year': 'Année',
     'pays/year': 'paies/an',
     'Company Name': 'Nom de l\'entreprise',
+    'Site Name / Number': 'Nom / Numéro du site',
     'Pay Period End Date': 'Date de fin de période de paie',
     'Payment Date': 'Date de paiement',
     'Import / Export Hours': 'Importer / Exporter les heures',
@@ -654,6 +655,7 @@ const TRANSLATIONS = {
     'Year': 'Año',
     'pays/year': 'pagos/año',
     'Company Name': 'Nombre de la empresa',
+    'Site Name / Number': 'Nombre / Número del sitio',
     'Pay Period End Date': 'Fecha de cierre del período de pago',
     'Payment Date': 'Fecha de pago',
     'Import / Export Hours': 'Importar / Exportar horas',
@@ -958,8 +960,12 @@ function renderDashboard() {
   const active = getActiveEmployees().length;
   const ytdGross = history.reduce((s, p) => s + p.results.reduce((a, r) => a + r.gross, 0), 0);
   const ytdNet = history.reduce((s, p) => s + p.results.reduce((a, r) => a + r.net_pay, 0), 0);
+  const siteName = localStorage.getItem('payroll_site_name') || '';
 
   document.getElementById('view-dashboard').innerHTML = `
+    ${siteName ? `<div class="card" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7;">
+      <strong style="font-size:14px;color:#0c4a6e;">📍 ${siteName}</strong>
+    </div>` : ''}
     ${history.length === 0 ? `
       <div class="help-banner">
         <span class="icon">👋</span>
@@ -1030,6 +1036,7 @@ function renderNewPeriod() {
   const payDate = new Date(today.getTime() + 6 * 86400000).toISOString().split('T')[0];
   const active = getActiveEmployees();
   const companyName = localStorage.getItem('payroll_company_name') || COMPANY.name;
+  const siteName = localStorage.getItem('payroll_site_name') || '';
 
   document.getElementById('view-newPeriod').innerHTML = `
     <div class="card">
@@ -1039,7 +1046,10 @@ function renderNewPeriod() {
           <label>${t('Company Name')}</label>
           <input type="text" id="companyNameInput" value="${companyName}" placeholder="Enter company name" onchange="saveCompanyName()">
         </div>
-        <div style="display:none;"></div>
+        <div>
+          <label>${t('Site Name / Number')}</label>
+          <input type="text" id="siteNameInput" value="${siteName}" placeholder="e.g., Location 1, Branch A" onchange="saveSiteName()">
+        </div>
       </div>
       <div class="form-row">
         <div>
@@ -1115,6 +1125,11 @@ function saveCompanyName() {
   localStorage.setItem('payroll_company_name', companyName);
   const companyEl = document.getElementById('companyName');
   if (companyEl) companyEl.textContent = companyName;
+}
+
+function saveSiteName() {
+  const siteName = document.getElementById('siteNameInput')?.value || '';
+  localStorage.setItem('payroll_site_name', siteName);
 }
 
 function downloadHoursTemplate() {
