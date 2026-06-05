@@ -1,0 +1,26 @@
+Company,Garderie La Belle Academie Inc.
+Period End Date,2026-06-19
+Payment Date,2026-06-25
+Pay Frequency,Biweekly
+Year,2026
+
+INSTRUCTIONS:
+1. Fill in hours worked for each employee in the columns below
+2. Regular = standard work hours | Holiday = stat holidays | Vacation = vacation taken
+3. Special $ = one-time bonus/payment | Maternity = maternity hours
+4. Once filled, File > Download > CSV and upload to payroll system
+5. To share with managers: Share button (top right) > Add emails
+
+Code,Employee Name,Department,Occupation,Rate/hr,Regular,Holiday,Vacation,Special $,Maternity,Notes
+A1,Hooma Mohammad,04GHBB DPT,Carer,25.00,0,0,0,0,0,
+A6,Nadin Al Katan,04GHBB DPT,Carer,18.00,0,0,0,0,0,
+A8,Lana Aldamman,04GHBB DPT,Carer,25.00,0,0,0,0,0,
+A9,Majda Ghabro,04GHBB DPT,Carer,25.00,0,0,0,0,0,
+A15,Gracia Israeel,04GHBB DPT,Carer,19.75,0,0,0,0,0,
+A18,Rouba Nader,04GHBB DPT,Carer,18.00,0,0,0,0,0,
+A19,Lysa Bessam,04GHBB DPT,Carer,16.50,0,0,0,0,0,
+A21,Torpekay Hassanzada,04GHBB DPT,Carer,17.00,0,0,0,0,0,
+A22,Silva Danho,04GHBB DPT,Carer,17.00,0,0,0,0,0,
+A23,Lara Chakal,04GHBB DPT,Carer,18.00,0,0,0,0,0,
+
+TOTALS,,,,,=SUM(F11:F20),=SUM(G11:G20),=SUM(H11:H20),=SUM(I11:I20),=SUM(J11:J20),
